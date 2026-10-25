@@ -73,3 +73,4 @@ to for Windows.
 
 - For support: **khanh1985@gmail.com**
 - **Phone:** +84 985 884 764
+- [Privacy policy](https://github.com/xuankhanh/VideoDownloader/blob/main/PRIVACY.md), including how to delete your data
