@@ -13,7 +13,8 @@ rest: it downloads in the background, several at a time, and tells you when each
 2. **You choose what to get.** Video with sound, video only, or just the sound as MP3, M4A, FLAC and more, in the
    quality you want: each quality shows its size.
 3. **It downloads in the background.** Pause, resume or cancel any download, and add more while others run.
-4. **It keeps itself working.** Sites change often; one click updates the download engine (yt-dlp) and its tools.
+4. **It keeps itself working.** Sites change often; one click updates the download engine (yt-dlp), its tools and
+   Video Downloader itself.
 
 ## Features
 
@@ -22,17 +23,24 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **1800+ sites** | YouTube, Facebook, TikTok, Instagram, X, Vimeo, SoundCloud, Bandcamp and many more. |
 | **Any quality** | From 144p to 4K and 8K, 60 fps and HDR when the video has them, with the size of each. |
 | **Pick exact streams** | **Choose streams...** lists every video and audio stream with its codec (H.264, VP9, AV1), HDR, audio language and size. Pick a dubbed language, or a codec your TV plays. |
+| **Plays everywhere** | Choose **MP4 H.264** as the format and the video plays on any TV, phone, car or video editor: a video the site only has in VP9, AV1 or HEVC (often 1440p and 4K), or in HDR, is converted after downloading. |
 | **Music and audio** | Save just the sound as MP3, M4A, AAC, Opus, FLAC or WAV, at the bitrate you choose, with the cover picture. |
 | **Only the part you want** | Download from one time to another, or pick **Chapters**: some of them as one file, or each to its own file named after it. |
-| **Playlists and channels** | See every video in the list and tick the ones you want. |
-| **Several downloads at once** | Choose how many run at the same time; the rest wait in the queue. |
+| **Playlists and channels** | See every video in the list and tick the ones you want. Open the same playlist or channel again later and the videos you already downloaded are greyed and unticked: only the new ones are added. |
+| **Pictures and posts** | Photos and whole posts too, from 300+ sites (Instagram and X photos, Pinterest, Imgur, DeviantArt, Reddit galleries...): install **gallery-dl** from the Tools menu, and links yt-dlp can't read are read with it. Or choose **Pictures and posts** to get every file of a post or profile, or only its latest posts (the last 10, 50... or the last 7, 30 days). When a post has a video and pictures, both are offered. |
+| **Sign in to sites** | For private, friends-only and members-only videos, and YouTube's "confirm you're not a bot": Tools > **Sign in to sites** opens Facebook, YouTube, Instagram, X, TikTok and others in a separate browser window. Sign in there once, and downloads from that site use it. Your own browser isn't touched. |
+| **Drag and drop** | Drop a link from your browser, a link shortcut, or a text file of links on the window: it is read at once. |
+| **Faster downloads** | Each file is downloaded over many connections at once with **aria2**, which the app adds by itself: much faster on sites that slow down each connection (Facebook, Bilibili and others). If a site refuses it, that download is tried again without it. Turn it off in Settings > Network. |
+| **Several downloads at once** | Choose how many run at the same time; the rest wait in the queue. Close the app whenever you like: the queue comes back next time, and unfinished downloads carry on where they stopped. |
+| **Live streams** | Record a live stream from its beginning or from now, or wait for one that hasn't started. Press **Stop & save** to keep what's recorded so far. |
 | **Subtitles and more inside the file** | Embed subtitles in your languages, the thumbnail as cover, the title and description, and chapter marks. |
+| **Burned-in subtitles** | Or draw the subtitles on the picture (Settings > Subtitles in the video), so they show on any player or site. |
 | **Skip the sponsors** | On YouTube, cut out the sponsor, intro and "subscribe" parts viewers have marked. |
 | **PiP video** | Also make a picture-in-picture version of a download, ready to post. |
 | **Thumbnails and subtitles on their own** | Tools > **Thumbnail saver** saves a video's cover picture, biggest first; **Subtitle extractor** saves its subtitles as SRT, VTT, ASS or LRC. |
 | **Live chat archiver** | Tools > **Live chat archiver** saves a YouTube live stream's or premiere's chat replay: every message with its time, author, Super Chats and memberships. Filter it by words (or a regular expression), and save it as CSV for Excel or JSON. Double-click a message to watch that moment. |
 | **Bilingual subtitles** | In the Subtitle extractor, tick two languages and **Bilingual**: one file shows each line in both, the language you choose on top, the other under it. For learning a language, or watching together. |
-| **Browser extension** | In Chrome, Edge or Brave, one click on the extension's button sends the video you're watching to the app, signed in as you are in the browser. Or right-click a link or a video and choose **Download with Video Downloader**. |
+| **Browser extension** | In Chrome, Edge or Brave, one click on the extension's button sends the video you're watching to the app (a blue arrow on the button shows when the page is a video), signed in as you are in the browser. Or right-click a link or a video and choose **Download with Video Downloader**. |
 | **Copy a link, it's read** | Turn on Tools > **Watch the clipboard for links**: copy a video's address in your browser and it's ready to download. |
 | **Videos that need a sign-in** | Send them with the browser extension, which brings your sign-in along. Or use the cookies of the browser you're signed in with (Firefox), or a cookies file, for videos only members or friends can see. |
 | **Its own log** | Right-click a download and choose **Show log** to see exactly what happened, to fix a problem or ask for help. |
@@ -92,7 +100,8 @@ Run `VideoDownloader-<version>.exe` and follow the steps. No administrator right
 version over the old one keeps your settings.
 
 The first time it starts, Video Downloader downloads ffmpeg (about 110 MB), which it needs to join HD video with its
-sound, convert audio and cut parts. The status bar shows how far it got; it is ready to use when that is done.
+sound, convert audio and cut parts. The status bar shows how far it got; it is ready to use when that is done. It
+then adds aria2 (about 5 MB), for faster downloads, in the background.
 
 For YouTube, the app offers to add Deno (about 45 MB) the first time you read a YouTube link: without it YouTube
 gives fewer qualities, often not the best. You can also add it later from the Tools menu.
