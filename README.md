@@ -14,7 +14,7 @@ rest: it downloads in the background, several at a time, and tells you when each
    quality you want: each quality shows its size. Or a post's or album's pictures, all of them or only the latest.
 3. **It downloads in the background.** Pause, resume or cancel any download, and add more while others run.
 4. **It keeps itself working.** Sites change often; one click updates the download engine (yt-dlp), its tools and
-   Video Downloader itself.
+   Video Downloader itself. Settings can switch yt-dlp to its nightly builds, which get site fixes days sooner.
 
 ## Features
 
@@ -29,8 +29,10 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **Playlists and channels** | See every video in the list and tick the ones you want. Open the same playlist or channel again later and the videos you already downloaded are greyed and unticked: only the new ones are added. |
 | **Pictures and posts** | Photos and whole posts too, from 300+ sites (Instagram and X photos, Pinterest, Imgur, DeviantArt, Reddit galleries...): install **gallery-dl** from the Tools menu, and links yt-dlp can't read are read with it. Or choose **Pictures and posts** to get every file of a post or profile, or only its latest posts (the last 10, 50... or the last 7, 30 days). When a post has a video and pictures, both are offered. |
 | **Sign in to sites** | For private, friends-only and members-only posts and videos, and YouTube's "confirm you're not a bot": Tools > **Sign in to sites** opens Facebook, YouTube, Instagram, X, TikTok and others in a separate browser window. Sign in there once, and downloads from that site use it. Your own browser isn't touched. |
+| **Your file names** | Change a download's name before adding it, or a playlist's in its list (double-click or F2). The rest are named by Settings > **File name template**, which can also sort them into folders (by channel, by date...). **File date** dates each file when it was posted, or when it was downloaded. |
 | **Drag and drop** | Drop a link from your browser, a link shortcut, or a text file of links on the window: it is read at once. |
 | **Faster downloads** | Each file is downloaded over many connections at once with **aria2**, which the app adds by itself: much faster on sites that slow down each connection (Facebook, Bilibili and others). If a site refuses it, that download is tried again without it. Turn it off in Settings > Network. |
+| **Network settings** | A proxy, a speed limit per download, how many parts of a streamed video come at once, and a browser to look like (Chrome, Edge, Firefox, Safari) for sites that turn away downloaders: Settings > Network. |
 | **Several downloads at once** | Choose how many run at the same time; the rest wait in the queue. Close the app whenever you like: the queue comes back next time, and unfinished downloads carry on where they stopped. |
 | **Live streams** | Record a live stream from its beginning or from now, or wait for one that hasn't started. Press **Stop & save** to keep what's recorded so far. |
 | **Subtitles and more inside the file** | Embed subtitles in your languages, the thumbnail as cover, the title and description, and chapter marks. |
@@ -43,8 +45,10 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **Browser extension** | In Chrome, Edge or Brave, one click on the extension's button sends the page you're on to the app, a video, pictures or a post (a blue arrow on the button shows when the page is a video), signed in as you are in the browser. Or right-click a link, a video or a picture and choose **Download with Video Downloader**. |
 | **Copy a link, it's read** | Turn on Tools > **Watch the clipboard for links**: copy a video's or post's address in your browser and it's ready to download. |
 | **Posts and videos that need a sign-in** | Send them with the browser extension, which brings your sign-in along. Or use the cookies of the browser you're signed in with (Firefox), or a cookies file, for what only members or friends can see. |
+| **Told when it's done** | A notification when a download ends while the window is in the background. |
 | **Its own log** | Right-click a download and choose **Show log** to see exactly what happened, to fix a problem or ask for help. |
-| **Light or dark** | Follows your Windows theme, or choose one in Settings. |
+| **Light or dark, English or Vietnamese** | Follows your Windows theme and display language, or choose them in Settings. |
+| **For scripts** | `VideoDownloader.exe <link>... [--dir <folder>] [--cookies <cookies.txt>]` opens the app with the links read, saving to that folder with those cookies for that run only. |
 
 ## Choosing the exact streams
 
