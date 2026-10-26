@@ -83,15 +83,16 @@ Everything stays on your PC:
   the sites you signed in to, and the extension's while the app is open.
 - Your license key, in `%LOCALAPPDATA%\MediaDownloader\license.dat`, encrypted for your Windows user.
 - Your downloads, in the folder you choose.
-
-A download's log stays in the app's memory and is gone when you close it, unless you save it yourself.
+- The downloads' logs (what **Show log** shows: each download's link, title, where it was saved and what yt-dlp
+  said, with passwords hidden), one file a day in `%LOCALAPPDATA%\MediaDownloader\logs`, kept 14 days, so you can
+  send one to us when something went wrong (**Help > Open the logs folder**). They are only sent if you choose to.
 
 ## Deleting your data
 
 1. Remove the extension, if you added it: in the browser, open `chrome://extensions` (`edge://extensions`,
    `brave://extensions`) and press **Remove** on Media Downloader.
-2. Uninstall Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept: pasted cookies,
-   the sites you signed in to, and the extension's.
+2. Uninstall Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept (pasted cookies,
+   the sites you signed in to, and the extension's) and the downloads' logs.
 3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queue, the list of what you downloaded) and
    `%LOCALAPPDATA%\MediaDownloader` (ffmpeg, Deno, gallery-dl, aria2 and your license key). Uninstalling leaves them,
    so a reinstall keeps your settings and license.
