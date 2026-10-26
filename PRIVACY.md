@@ -10,14 +10,16 @@ with anyone.
 
 ## What the app connects to
 
-- **The sites you download from.** When you analyze or download a link, the app (through yt-dlp) connects to that
-  site, as your browser would, to read the video and download it. Each site has its own privacy policy.
+- **The sites you download from.** When you analyze or download a link, the app (through yt-dlp, or gallery-dl for
+  pictures and posts) connects to that site, as your browser would, to read the video, pictures or post and download
+  them. Each site has its own privacy policy.
 - **SponsorBlock**, only when you tick **Cut sponsors** or make a PiP video of a YouTube video: the app sends the
   video's ID to `sponsor.ajay.app` to learn which parts viewers marked as sponsors. Nothing else is sent.
-- **Its tools' download sites**, to download and update what it needs: GitHub (yt-dlp, and ffmpeg from gyan.dev's
-  GitHub mirror), www.gyan.dev (ffmpeg, when GitHub can't be read) and dl.deno.land (Deno, for YouTube). They only
-  learn that a copy is being downloaded, as for any download from your browser. Turn off update checks in Settings if
-  you don't want the app to check for new versions when it starts.
+- **Its tools' download sites**, to download and update what it needs: GitHub (yt-dlp, aria2, ffmpeg from gyan.dev's
+  GitHub mirror, and new versions of Video Downloader itself), www.gyan.dev (ffmpeg, when GitHub can't be read),
+  dl.deno.land (Deno, for YouTube) and codeberg.org (gallery-dl, for pictures and posts). They only learn that a copy
+  is being downloaded, as for any download from your browser. Turn off update checks in Settings if you don't want the
+  app to check for new versions when it starts.
 - **www.google.com, or github.com**, to learn today's date for the free days and the license (from the date on the
   answer, not your PC's clock). This is a plain request for the home page's headers: nothing about you, your license
   or your PC is sent.
@@ -40,8 +42,12 @@ of the site you click on.
 
 ## Cookies
 
-Videos that need a sign-in can be downloaded with your cookies, only if you choose so:
+Posts and videos that need a sign-in can be downloaded with your cookies, only if you choose so:
 
+- **From Tools > Sign in to sites:** the site opens in a separate Edge, Chrome or Brave window, with a new, empty
+  profile made for it: your own browser's profile, history and cookies aren't read. Once you have signed in, that
+  site's cookies are saved in `%APPDATA%\VideoDownloader\sign-ins`, and the window's profile is deleted. The same
+  window lets you remove a saved sign-in.
 - **From the browser extension:** the cookies it sends (above) are kept in
   `%LOCALAPPDATA%\VideoDownloader\browser-cookies` while the app is open, and deleted when you close it. Each time
   you send a link from a site, that site's cookies replace the ones kept for it.
@@ -50,7 +56,7 @@ Videos that need a sign-in can be downloaded with your cookies, only if you choo
 - **From a file, or pasted, in Settings:** the same, from the cookies.txt file you choose; pasted cookies are kept in
   `%APPDATA%\VideoDownloader\cookies.txt`.
 
-All of them are sent only to the site they belong to, as your browser would send them. Cookies are never sent to us
+All of them are given to yt-dlp and gallery-dl, and sent only to the site they belong to, as your browser would send them. Cookies are never sent to us
 or anywhere else.
 
 ## Your license
@@ -65,8 +71,15 @@ key and support.
 
 Everything stays on your PC:
 
-- Your settings, in `%APPDATA%\VideoDownloader\settings.json`, and pasted cookies (above).
-- ffmpeg and Deno, in `%LOCALAPPDATA%\VideoDownloader`, and the extension's cookies while the app is open (above).
+- Your settings, in `%APPDATA%\VideoDownloader\settings.json`, pasted cookies and the sites you signed in to
+  (above).
+- The list of what you downloaded (each one's site and ID, e.g. `youtube dQw4w9WgXcQ`), in
+  `%APPDATA%\VideoDownloader\downloaded.txt`, so a playlist or channel opened again shows which ones you already have.
+- The download queue (each download's link, title, options and where it was saved), in
+  `%APPDATA%\VideoDownloader\queue.json`, so it comes back the next time the app starts. Remove downloads from the
+  list, or press Clear finished, to take them out of it.
+- ffmpeg, Deno, gallery-dl and aria2, in `%LOCALAPPDATA%\VideoDownloader`, and the extension's cookies while the app
+  is open (above).
 - Your license key, in `%LOCALAPPDATA%\VideoDownloader\license.dat`, encrypted for your Windows user.
 - Your downloads, in the folder you choose.
 
@@ -77,9 +90,10 @@ A download's log stays in the app's memory and is gone when you close it, unless
 1. Remove the extension, if you added it: in the browser, open `chrome://extensions` (`edge://extensions`,
    `brave://extensions`) and press **Remove** on Video Downloader.
 2. Uninstall Video Downloader in Windows (**Settings > Apps**).
-3. Delete the folders `%APPDATA%\VideoDownloader` (settings and pasted cookies) and `%LOCALAPPDATA%\VideoDownloader`
-   (ffmpeg, Deno, your license key, and the extension's cookies if the app didn't close normally). Uninstalling leaves
-   them, so a reinstall keeps your settings and license.
+3. Delete the folders `%APPDATA%\VideoDownloader` (settings, the queue, the list of what you downloaded, pasted
+   cookies and sign-ins) and `%LOCALAPPDATA%\VideoDownloader` (ffmpeg, Deno, gallery-dl, aria2, your license key, and
+   the extension's cookies if the app didn't close normally). Uninstalling leaves them, so a reinstall keeps your
+   settings and license.
 
 Your downloads stay in their folder until you delete them.
 

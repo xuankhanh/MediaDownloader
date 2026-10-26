@@ -1,17 +1,17 @@
 # Video Downloader
 
-**Save videos, music, subtitles and thumbnails from YouTube, Facebook, TikTok and 1800+ other sites, in the quality and format you choose.**
+**Save videos, music, pictures, albums, subtitles and thumbnails from YouTube, Facebook, TikTok, Instagram and 1800+ other sites, in the quality and format you choose.**
 
-Paste a link, press **Analyze** to see the video and its qualities, and press **Add to queue**. Video Downloader does the
+Paste a link, press **Analyze** to see what it has (a video and its qualities, a playlist, or a post's pictures), and press **Add to queue**. Video Downloader does the
 rest: it downloads in the background, several at a time, and tells you when each one is saved.
 
 ![The main window: a video read from its link, the download options, and the queue with three finished downloads. Video: Big Buck Bunny, (c) Blender Foundation, CC BY 3.0](images/main-window.png)
 
 ## What it does
 
-1. **You paste a link.** A video, a whole playlist or channel, or several links at once.
+1. **You paste a link.** A video, a whole playlist or channel, a picture, album or post, or several links at once.
 2. **You choose what to get.** Video with sound, video only, or just the sound as MP3, M4A, FLAC and more, in the
-   quality you want: each quality shows its size.
+   quality you want: each quality shows its size. Or a post's or album's pictures, all of them or only the latest.
 3. **It downloads in the background.** Pause, resume or cancel any download, and add more while others run.
 4. **It keeps itself working.** Sites change often; one click updates the download engine (yt-dlp), its tools and
    Video Downloader itself.
@@ -28,7 +28,7 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **Only the part you want** | Download from one time to another, or pick **Chapters**: some of them as one file, or each to its own file named after it. |
 | **Playlists and channels** | See every video in the list and tick the ones you want. Open the same playlist or channel again later and the videos you already downloaded are greyed and unticked: only the new ones are added. |
 | **Pictures and posts** | Photos and whole posts too, from 300+ sites (Instagram and X photos, Pinterest, Imgur, DeviantArt, Reddit galleries...): install **gallery-dl** from the Tools menu, and links yt-dlp can't read are read with it. Or choose **Pictures and posts** to get every file of a post or profile, or only its latest posts (the last 10, 50... or the last 7, 30 days). When a post has a video and pictures, both are offered. |
-| **Sign in to sites** | For private, friends-only and members-only videos, and YouTube's "confirm you're not a bot": Tools > **Sign in to sites** opens Facebook, YouTube, Instagram, X, TikTok and others in a separate browser window. Sign in there once, and downloads from that site use it. Your own browser isn't touched. |
+| **Sign in to sites** | For private, friends-only and members-only posts and videos, and YouTube's "confirm you're not a bot": Tools > **Sign in to sites** opens Facebook, YouTube, Instagram, X, TikTok and others in a separate browser window. Sign in there once, and downloads from that site use it. Your own browser isn't touched. |
 | **Drag and drop** | Drop a link from your browser, a link shortcut, or a text file of links on the window: it is read at once. |
 | **Faster downloads** | Each file is downloaded over many connections at once with **aria2**, which the app adds by itself: much faster on sites that slow down each connection (Facebook, Bilibili and others). If a site refuses it, that download is tried again without it. Turn it off in Settings > Network. |
 | **Several downloads at once** | Choose how many run at the same time; the rest wait in the queue. Close the app whenever you like: the queue comes back next time, and unfinished downloads carry on where they stopped. |
@@ -40,9 +40,9 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **Thumbnails and subtitles on their own** | Tools > **Thumbnail saver** saves a video's cover picture, biggest first; **Subtitle extractor** saves its subtitles as SRT, VTT, ASS or LRC. |
 | **Live chat archiver** | Tools > **Live chat archiver** saves a YouTube live stream's or premiere's chat replay: every message with its time, author, Super Chats and memberships. Filter it by words (or a regular expression), and save it as CSV for Excel or JSON. Double-click a message to watch that moment. |
 | **Bilingual subtitles** | In the Subtitle extractor, tick two languages and **Bilingual**: one file shows each line in both, the language you choose on top, the other under it. For learning a language, or watching together. |
-| **Browser extension** | In Chrome, Edge or Brave, one click on the extension's button sends the video you're watching to the app (a blue arrow on the button shows when the page is a video), signed in as you are in the browser. Or right-click a link or a video and choose **Download with Video Downloader**. |
-| **Copy a link, it's read** | Turn on Tools > **Watch the clipboard for links**: copy a video's address in your browser and it's ready to download. |
-| **Videos that need a sign-in** | Send them with the browser extension, which brings your sign-in along. Or use the cookies of the browser you're signed in with (Firefox), or a cookies file, for videos only members or friends can see. |
+| **Browser extension** | In Chrome, Edge or Brave, one click on the extension's button sends the page you're on to the app, a video, pictures or a post (a blue arrow on the button shows when the page is a video), signed in as you are in the browser. Or right-click a link, a video or a picture and choose **Download with Video Downloader**. |
+| **Copy a link, it's read** | Turn on Tools > **Watch the clipboard for links**: copy a video's or post's address in your browser and it's ready to download. |
+| **Posts and videos that need a sign-in** | Send them with the browser extension, which brings your sign-in along. Or use the cookies of the browser you're signed in with (Firefox), or a cookies file, for what only members or friends can see. |
 | **Its own log** | Right-click a download and choose **Show log** to see exactly what happened, to fix a problem or ask for help. |
 | **Light or dark** | Follows your Windows theme, or choose one in Settings. |
 
@@ -54,7 +54,7 @@ For one video, the last entry of the Quality list, **Choose streams...**, opens 
 
 Pick a video stream and an audio stream, and press **Use these**. The pick shows in the Quality list and in the queue.
 
-## Sending videos from your browser
+## Sending links from your browser
 
 The extension for Chrome, Edge and Brave comes with the app. Add it once:
 
@@ -64,11 +64,11 @@ The extension for Chrome, Edge and Brave comes with the app. Add it once:
 3. Press **Load unpacked** and choose that folder (paste its path in the folder box).
 4. Pin it: press the puzzle piece next to the address bar, then the pin next to Video Downloader.
 
-Then, on a video's page, click the Video Downloader button: the app opens (or comes to the front) with the video read,
-ready to choose the quality and press **Add to queue**. A tick on the button says the video was sent. Right-click a
-link, or a video playing in the page, for **Download with Video Downloader**.
+Then, on a video's or post's page, click the Video Downloader button: the app opens (or comes to the front) with the
+link read, ready to choose the quality and press **Add to queue**. A tick on the button says the link was sent.
+Right-click a link, a video playing in the page or a picture for **Download with Video Downloader**.
 
-Videos you can only see signed in (members-only, private or age-restricted) work too: the extension sends your
+Posts and videos you can only see signed in (members-only, private or age-restricted) work too: the extension sends your
 browser's cookies for that site with the link, so the app is signed in as you are. When you add the extension, the
 browser warns that it can "read and change all your data on all websites": that is what reading a site's cookies
 needs. It sends nothing until you click, and then only the link and that one site's cookies, only to the app on your
@@ -77,7 +77,7 @@ PC. The app keeps them while it is open, uses them for that site only, and delet
 ## Free trial
 
 Try everything free for **30 days**, no key needed and nothing limited. The status bar shows how many days are left.
-After that, Video Downloader still reads links, but downloading (videos, music, subtitles, thumbnails and chats) needs
+After that, Video Downloader still reads links, but downloading (videos, music, pictures, subtitles, thumbnails and chats) needs
 a license key.
 
 ## Buying a license
@@ -111,7 +111,7 @@ gives fewer qualities, often not the best. You can also add it later from the To
 Download only what you have the right to: your own videos, videos their owner lets you download, or what the law lets
 you copy. Each site has its own terms. See the license agreement shown during setup.
 
-Video Downloader uses yt-dlp and FFmpeg, made by others and free to use under their own licenses: see
+Video Downloader uses yt-dlp, FFmpeg, Deno, gallery-dl and aria2, made by others and free to use under their own licenses: see
 THIRD-PARTY-NOTICES.txt in the folder the app is installed in. FFmpeg is gyan.dev's build, the one ffmpeg.org links
 to for Windows.
 
