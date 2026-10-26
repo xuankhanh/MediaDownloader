@@ -66,6 +66,20 @@ browser warns that it can "read and change all your data on all websites": that 
 needs. It sends nothing until you click, and then only the link and that one site's cookies, only to the app on your
 PC. The app keeps them while it is open, uses them for that site only, and deletes them when you close it.
 
+## Free trial
+
+Try everything free for **30 days**, no key needed and nothing limited. The status bar shows how many days are left.
+After that, Video Downloader still reads links, but downloading (videos, music, subtitles, thumbnails and chats) needs
+a license key.
+
+## Buying a license
+
+Open **Help > License...** (or click the license text at the right of the status bar), copy the machine code it
+shows, and send it to us by email (the **Copy email** button helps). You get a license key back: paste it into the
+same window and press **Register**.
+
+Licenses are available for a period of time (for example monthly or yearly), for your PC.
+
 ## Requirements
 
 - Windows 10 or Windows 11 (64-bit)
@@ -97,3 +111,5 @@ to for Windows.
 - For support: **khanh1985@gmail.com**
 - **Phone:** +84 985 884 764
 - [Privacy policy](https://github.com/xuankhanh/VideoDownloader/blob/main/PRIVACY.md), including how to delete your data
+
+© 2026 Truong Xuan Khanh. All rights reserved.
