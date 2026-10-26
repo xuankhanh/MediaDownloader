@@ -18,6 +18,9 @@ with anyone.
   GitHub mirror), www.gyan.dev (ffmpeg, when GitHub can't be read) and dl.deno.land (Deno, for YouTube). They only
   learn that a copy is being downloaded, as for any download from your browser. Turn off update checks in Settings if
   you don't want the app to check for new versions when it starts.
+- **www.google.com, or github.com**, to learn today's date for the free days and the license (from the date on the
+  answer, not your PC's clock). This is a plain request for the home page's headers: nothing about you, your license
+  or your PC is sent.
 
 If you set a proxy in Settings, these connections go through it.
 
@@ -50,12 +53,21 @@ Videos that need a sign-in can be downloaded with your cookies, only if you choo
 All of them are sent only to the site they belong to, as your browser would send them. Cookies are never sent to us
 or anywhere else.
 
+## Your license
+
+The license key is checked on your PC: no license server is involved. Your key, and the dates the free days and the
+license are counted by, are kept on your PC, encrypted by Windows. The License window shows your PC's **machine
+code**, made from Windows' own ID for the installation, so it says nothing about you or the PC itself. It is only sent
+if you choose to email it to us, to get a key for that PC; we keep it, with your email address, only to send you your
+key and support.
+
 ## Where it is stored
 
 Everything stays on your PC:
 
 - Your settings, in `%APPDATA%\VideoDownloader\settings.json`, and pasted cookies (above).
 - ffmpeg and Deno, in `%LOCALAPPDATA%\VideoDownloader`, and the extension's cookies while the app is open (above).
+- Your license key, in `%LOCALAPPDATA%\VideoDownloader\license.dat`, encrypted for your Windows user.
 - Your downloads, in the folder you choose.
 
 A download's log stays in the app's memory and is gone when you close it, unless you save it yourself.
@@ -66,13 +78,13 @@ A download's log stays in the app's memory and is gone when you close it, unless
    `brave://extensions`) and press **Remove** on Video Downloader.
 2. Uninstall Video Downloader in Windows (**Settings > Apps**).
 3. Delete the folders `%APPDATA%\VideoDownloader` (settings and pasted cookies) and `%LOCALAPPDATA%\VideoDownloader`
-   (ffmpeg, Deno, and the extension's cookies if the app didn't close normally). Uninstalling leaves them, so a
-   reinstall keeps your settings.
+   (ffmpeg, Deno, your license key, and the extension's cookies if the app didn't close normally). Uninstalling leaves
+   them, so a reinstall keeps your settings and license.
 
 Your downloads stay in their folder until you delete them.
 
-If you wrote to us for support and want us to delete your emails, or you have any question about your data, write to
-**khanh1985@gmail.com**. We delete them within 30 days and reply to confirm.
+If you want us to delete your emails, the machine code and license details we hold, or you have any question about your
+data, write to **khanh1985@gmail.com**. We delete them within 30 days and reply to confirm.
 
 ## Contact
 
