@@ -30,8 +30,11 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **Skip the sponsors** | On YouTube, cut out the sponsor, intro and "subscribe" parts viewers have marked. |
 | **PiP video** | Also make a picture-in-picture version of a download, ready to post. |
 | **Thumbnails and subtitles on their own** | Tools > **Thumbnail saver** saves a video's cover picture, biggest first; **Subtitle extractor** saves its subtitles as SRT, VTT, ASS or LRC. |
+| **Live chat archiver** | Tools > **Live chat archiver** saves a YouTube live stream's or premiere's chat replay: every message with its time, author, Super Chats and memberships. Filter it by words (or a regular expression), and save it as CSV for Excel or JSON. Double-click a message to watch that moment. |
+| **Bilingual subtitles** | In the Subtitle extractor, tick two languages and **Bilingual**: one file shows each line in both, the language you choose on top, the other under it. For learning a language, or watching together. |
+| **Browser extension** | In Chrome, Edge or Brave, one click on the extension's button sends the video you're watching to the app, signed in as you are in the browser. Or right-click a link or a video and choose **Download with Video Downloader**. |
 | **Copy a link, it's read** | Turn on Tools > **Watch the clipboard for links**: copy a video's address in your browser and it's ready to download. |
-| **Videos that need a sign-in** | Use the cookies of the browser you're signed in with, for videos only members or friends can see. |
+| **Videos that need a sign-in** | Send them with the browser extension, which brings your sign-in along. Or use the cookies of the browser you're signed in with (Firefox), or a cookies file, for videos only members or friends can see. |
 | **Its own log** | Right-click a download and choose **Show log** to see exactly what happened, to fix a problem or ask for help. |
 | **Light or dark** | Follows your Windows theme, or choose one in Settings. |
 
@@ -42,6 +45,26 @@ For one video, the last entry of the Quality list, **Choose streams...**, opens 
 ![Choose streams: every video and audio stream with its resolution, frame rate, codec, HDR, type and size](images/stream-picker.png)
 
 Pick a video stream and an audio stream, and press **Use these**. The pick shows in the Quality list and in the queue.
+
+## Sending videos from your browser
+
+The extension for Chrome, Edge and Brave comes with the app. Add it once:
+
+1. In Video Downloader, open **Tools > Browser extension...** and press **Open the folder**. Its path is copied too.
+2. In the browser, open `chrome://extensions` (`edge://extensions` in Edge, `brave://extensions` in Brave) and turn
+   on **Developer mode**.
+3. Press **Load unpacked** and choose that folder (paste its path in the folder box).
+4. Pin it: press the puzzle piece next to the address bar, then the pin next to Video Downloader.
+
+Then, on a video's page, click the Video Downloader button: the app opens (or comes to the front) with the video read,
+ready to choose the quality and press **Add to queue**. A tick on the button says the video was sent. Right-click a
+link, or a video playing in the page, for **Download with Video Downloader**.
+
+Videos you can only see signed in (members-only, private or age-restricted) work too: the extension sends your
+browser's cookies for that site with the link, so the app is signed in as you are. When you add the extension, the
+browser warns that it can "read and change all your data on all websites": that is what reading a site's cookies
+needs. It sends nothing until you click, and then only the link and that one site's cookies, only to the app on your
+PC. The app keeps them while it is open, uses them for that site only, and deletes them when you close it.
 
 ## Requirements
 
