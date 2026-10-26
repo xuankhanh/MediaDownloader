@@ -20,9 +20,10 @@ with anyone.
   dl.deno.land (Deno, for YouTube) and codeberg.org (gallery-dl, for pictures and posts). They only learn that a copy
   is being downloaded, as for any download from your browser. Turn off update checks in Settings if you don't want the
   app to check for new versions when it starts.
-- **www.google.com, or github.com**, to learn today's date for the free days and the license (from the date on the
-  answer, not your PC's clock). This is a plain request for the home page's headers: nothing about you, your license
-  or your PC is sent.
+- **A few well-known sites** (www.google.com, github.com, www.microsoft.com, www.cloudflare.com, www.bing.com,
+  www.baidu.com and www.apple.com, asked together; the first to answer is used), to learn today's date for the free
+  days and the license (from the date on the answer, not your PC's clock). This is a plain request for the home
+  page's headers: nothing about you, your license or your PC is sent.
 
 If you set a proxy in Settings, these connections go through it.
 
@@ -46,7 +47,7 @@ Posts and videos that need a sign-in can be downloaded with your cookies, only i
 
 - **From Tools > Sign in to sites:** the site opens in a separate Edge, Chrome or Brave window, with a new, empty
   profile made for it: your own browser's profile, history and cookies aren't read. Once you have signed in, that
-  site's cookies are saved in `%APPDATA%\MediaDownloader\sign-ins`, and the window's profile is deleted. The same
+  site's cookies are saved in `%LOCALAPPDATA%\MediaDownloader\sign-ins`, and the window's profile is deleted. The same
   window lets you remove a saved sign-in.
 - **From the browser extension:** the cookies it sends (above) are kept in
   `%LOCALAPPDATA%\MediaDownloader\browser-cookies` while the app is open, and deleted when you close it. Each time
@@ -54,10 +55,11 @@ Posts and videos that need a sign-in can be downloaded with your cookies, only i
 - **From your browser, chosen in Settings:** the app (through yt-dlp) reads the cookies of the browser you pick, on
   your PC, each time it reads or downloads a link.
 - **From a file, or pasted, in Settings:** the same, from the cookies.txt file you choose; pasted cookies are kept in
-  `%APPDATA%\MediaDownloader\cookies.txt`.
+  `%LOCALAPPDATA%\MediaDownloader\cookies.txt`.
 
 All of them are given to yt-dlp and gallery-dl, and sent only to the site they belong to, as your browser would send them. Cookies are never sent to us
-or anywhere else.
+or anywhere else. The cookies the app keeps are on this PC only (`%LOCALAPPDATA%`, which Windows doesn't copy to other
+PCs with a roaming profile), and uninstalling the app deletes them all.
 
 ## Your license
 
@@ -71,15 +73,14 @@ key and support.
 
 Everything stays on your PC:
 
-- Your settings, in `%APPDATA%\MediaDownloader\settings.json`, pasted cookies and the sites you signed in to
-  (above).
+- Your settings, in `%APPDATA%\MediaDownloader\settings.json`.
 - The list of what you downloaded (each one's site and ID, e.g. `youtube dQw4w9WgXcQ`), in
   `%APPDATA%\MediaDownloader\downloaded.txt`, so a playlist or channel opened again shows which ones you already have.
 - The download queue (each download's link, title, options and where it was saved), in
   `%APPDATA%\MediaDownloader\queue.json`, so it comes back the next time the app starts. Remove downloads from the
   list, or press Clear finished, to take them out of it.
-- ffmpeg, Deno, gallery-dl and aria2, in `%LOCALAPPDATA%\MediaDownloader`, and the extension's cookies while the app
-  is open (above).
+- ffmpeg, Deno, gallery-dl and aria2, in `%LOCALAPPDATA%\MediaDownloader`, with the cookies (above): pasted cookies,
+  the sites you signed in to, and the extension's while the app is open.
 - Your license key, in `%LOCALAPPDATA%\MediaDownloader\license.dat`, encrypted for your Windows user.
 - Your downloads, in the folder you choose.
 
@@ -89,11 +90,11 @@ A download's log stays in the app's memory and is gone when you close it, unless
 
 1. Remove the extension, if you added it: in the browser, open `chrome://extensions` (`edge://extensions`,
    `brave://extensions`) and press **Remove** on Media Downloader.
-2. Uninstall Media Downloader in Windows (**Settings > Apps**).
-3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queue, the list of what you downloaded, pasted
-   cookies and sign-ins) and `%LOCALAPPDATA%\MediaDownloader` (ffmpeg, Deno, gallery-dl, aria2, your license key, and
-   the extension's cookies if the app didn't close normally). Uninstalling leaves them, so a reinstall keeps your
-   settings and license.
+2. Uninstall Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept: pasted cookies,
+   the sites you signed in to, and the extension's.
+3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queue, the list of what you downloaded) and
+   `%LOCALAPPDATA%\MediaDownloader` (ffmpeg, Deno, gallery-dl, aria2 and your license key). Uninstalling leaves them,
+   so a reinstall keeps your settings and license.
 
 Your downloads stay in their folder until you delete them.
 
