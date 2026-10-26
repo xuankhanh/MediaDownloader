@@ -111,17 +111,6 @@ then adds aria2 (about 5 MB), for faster downloads, in the background.
 For YouTube, the app offers to add Deno (about 45 MB) the first time you read a YouTube link: without it YouTube
 gives fewer qualities, often not the best. You can also add it later from the Tools menu.
 
-### If Windows or your antivirus stops the setup
-
-Media Downloader is new and its setup isn't signed with a paid certificate, so Windows and some antivirus programs
-don't know it yet. That is a warning about a file they haven't seen often, not a virus found in it.
-
-- **"Windows protected your PC"**: press **More info**, then **Run anyway**.
-- **Nothing happens when you open the setup, or it disappears** (Norton, Symantec and other antivirus programs can
-  hold or quarantine new downloads): restore it from the antivirus's quarantine or history and allow it, or on a work
-  PC ask your IT to allow it. Its SHA-256, which proves it is the file from this page, is shown next to the setup on
-  the [releases page](https://github.com/xuankhanh/MediaDownloader/releases/latest).
-
 ## Please note
 
 Download only what you have the right to: your own videos, videos their owner lets you download, or what the law lets
