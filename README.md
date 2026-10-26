@@ -101,8 +101,9 @@ Licenses are available for a period of time (for example monthly or yearly), for
 ## Installing
 
 Run `MediaDownloader-<version>.exe` and follow the steps. No administrator rights are needed. Installing a new
-version over the old one keeps your settings. Uninstalling deletes the sign-ins and cookies the app kept, and
-leaves your settings, so a reinstall picks up where you left off.
+version over the old one keeps your settings. Uninstalling deletes the sign-ins and cookies the app kept, the
+download list and the record of what was downloaded, and leaves your settings, so a reinstall picks up where you left
+off.
 
 The first time it starts, Media Downloader downloads ffmpeg (about 110 MB), which it needs to join HD video with its
 sound, convert audio and cut parts. The status bar shows how far it got; it is ready to use when that is done. It
