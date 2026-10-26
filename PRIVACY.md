@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Video Downloader** (the Windows app)
+**Video Downloader** (the Windows app, and its browser extension for Chrome, Edge and Brave)
 
 Last updated: October 26, 2026
 
@@ -21,32 +21,53 @@ with anyone.
 
 If you set a proxy in Settings, these connections go through it.
 
+## The browser extension
+
+The extension does nothing until you click its button, or **Download with Video Downloader** in the right-click menu.
+Then it sends, only to the Video Downloader app on your PC (never over the internet):
+
+- the address of the page, or of the link you right-clicked;
+- your browser's cookies for that one site (for example all of youtube.com's), so the app is signed in to it as you
+  are in the browser.
+
+It doesn't read or send anything else: not your history, your other tabs, the pages you visit or the cookies of other
+sites. To read a site's cookies, the browser needs it to have access to all sites, which is why it warns, when you add
+the extension, that it can "read and change all your data on all websites". It uses that access only for the cookies
+of the site you click on.
+
 ## Cookies
 
-Videos that need a sign-in can be downloaded with your cookies, only if you choose so in Settings:
+Videos that need a sign-in can be downloaded with your cookies, only if you choose so:
 
-- **From your browser:** the app (through yt-dlp) reads the cookies of the browser you pick, on your PC, each time it
-  reads or downloads a link. They are sent only to the site you download from, as your browser would send them.
-- **From a file, or pasted:** the same, from the cookies.txt file you choose; pasted cookies are kept in
+- **From the browser extension:** the cookies it sends (above) are kept in
+  `%LOCALAPPDATA%\VideoDownloader\browser-cookies` while the app is open, and deleted when you close it. Each time
+  you send a link from a site, that site's cookies replace the ones kept for it.
+- **From your browser, chosen in Settings:** the app (through yt-dlp) reads the cookies of the browser you pick, on
+  your PC, each time it reads or downloads a link.
+- **From a file, or pasted, in Settings:** the same, from the cookies.txt file you choose; pasted cookies are kept in
   `%APPDATA%\VideoDownloader\cookies.txt`.
 
-Cookies are never sent to us or anywhere else.
+All of them are sent only to the site they belong to, as your browser would send them. Cookies are never sent to us
+or anywhere else.
 
 ## Where it is stored
 
 Everything stays on your PC:
 
 - Your settings, in `%APPDATA%\VideoDownloader\settings.json`, and pasted cookies (above).
-- ffmpeg and Deno, in `%LOCALAPPDATA%\VideoDownloader`.
+- ffmpeg and Deno, in `%LOCALAPPDATA%\VideoDownloader`, and the extension's cookies while the app is open (above).
 - Your downloads, in the folder you choose.
 
 A download's log stays in the app's memory and is gone when you close it, unless you save it yourself.
 
 ## Deleting your data
 
-1. Uninstall Video Downloader in Windows (**Settings > Apps**).
-2. Delete the folders `%APPDATA%\VideoDownloader` (settings and pasted cookies) and `%LOCALAPPDATA%\VideoDownloader`
-   (ffmpeg and Deno). Uninstalling leaves them, so a reinstall keeps your settings.
+1. Remove the extension, if you added it: in the browser, open `chrome://extensions` (`edge://extensions`,
+   `brave://extensions`) and press **Remove** on Video Downloader.
+2. Uninstall Video Downloader in Windows (**Settings > Apps**).
+3. Delete the folders `%APPDATA%\VideoDownloader` (settings and pasted cookies) and `%LOCALAPPDATA%\VideoDownloader`
+   (ffmpeg, Deno, and the extension's cookies if the app didn't close normally). Uninstalling leaves them, so a
+   reinstall keeps your settings.
 
 Your downloads stay in their folder until you delete them.
 
