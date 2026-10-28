@@ -13,8 +13,8 @@ rest: it downloads in the background, several at a time, and tells you when each
 2. **You choose what to get.** Video with sound, video only, or just the sound as MP3, M4A, FLAC and more, in the
    quality you want: each quality shows its size. Or a post's or album's pictures, all of them or only the latest.
 3. **It downloads in the background.** Pause, resume or cancel any download, and add more while others run.
-4. **It keeps itself working.** Sites change often; one click updates the download engine (yt-dlp), its tools and
-   Media Downloader itself. Settings can switch yt-dlp to its nightly builds, which get site fixes days sooner.
+4. **It keeps itself working.** Sites change often: the download engine (yt-dlp) updates itself each time the app
+   starts, and one click updates the other tools and Media Downloader itself. Settings can switch yt-dlp to its nightly builds, which get site fixes days sooner.
 
 ## Features
 
@@ -105,9 +105,10 @@ version over the old one keeps your settings. Uninstalling deletes the sign-ins 
 download list and the record of what was downloaded, and leaves your settings, so a reinstall picks up where you left
 off.
 
-The first time it starts, Media Downloader downloads ffmpeg (about 110 MB), which it needs to join HD video with its
-sound, convert audio and cut parts. The status bar shows how far it got; it is ready to use when that is done. It
-then adds aria2 (about 5 MB), for faster downloads, in the background.
+The first time it starts, Media Downloader downloads yt-dlp (about 24 MB), the engine that reads and downloads the
+links, and ffmpeg (about 110 MB), which it needs to join HD video with its sound, convert audio and cut parts. The
+status bar shows how far each got; it is ready to use when that is done. It then adds aria2 (about 5 MB), for faster
+downloads, in the background. After that, it updates yt-dlp by itself when it starts and a new one is out.
 
 For YouTube, the app offers to add Deno (about 45 MB) the first time you read a YouTube link: without it YouTube
 gives fewer qualities, often not the best. You can also add it later from the Tools menu.
