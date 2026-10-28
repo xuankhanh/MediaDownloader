@@ -1,6 +1,6 @@
 # Media Downloader
 
-**Save videos, music, pictures, albums, subtitles and thumbnails from YouTube, Facebook, TikTok, Instagram and 1800+ other sites, in the quality and format you choose.**
+**Save videos, music, pictures, albums, subtitles and thumbnails from YouTube, Facebook, TikTok, Douyin, Bilibili, Instagram and 1800+ other sites, in the quality and format you choose.**
 
 Paste a link, press **Analyze** to see what it has (a video and its qualities, a playlist, or a post's pictures), and press **Add to queue**. Media Downloader does the
 rest: it downloads in the background, several at a time, and tells you when each one is saved.
@@ -20,7 +20,7 @@ rest: it downloads in the background, several at a time, and tells you when each
 
 | | |
 |---|---|
-| **1800+ sites** | YouTube, Facebook, TikTok, Instagram, X, Vimeo, SoundCloud, Bandcamp and many more. |
+| **1800+ sites** | YouTube, Facebook, TikTok, Douyin, Bilibili, Instagram, X, Vimeo, SoundCloud, Bandcamp and many more. |
 | **Any quality** | From 144p to 4K and 8K, 60 fps and HDR when the video has them, with the size of each. |
 | **Pick exact streams** | **Choose streams...** lists every video and audio stream with its codec (H.264, VP9, AV1), HDR, audio language and size. Pick a dubbed language, or a codec your TV plays. |
 | **Plays everywhere** | Choose **MP4 H.264** as the format and the video plays on any TV, phone, car or video editor: a video the site only has in VP9, AV1 or HEVC (often 1440p and 4K), or in HDR, is converted after downloading. |
