@@ -2,7 +2,7 @@
 
 **Media Downloader** (the Windows app, and its browser extension for Chrome, Edge and Brave)
 
-Last updated: October 26, 2026
+Last updated: October 28, 2026
 
 Media Downloader is a Windows desktop app. It runs on your own PC. It has no account, we don't run a server that
 receives your data, and it doesn't collect or send any usage or tracking information. We don't sell or share your data
@@ -13,13 +13,15 @@ with anyone.
 - **The sites you download from.** When you analyze or download a link, the app (through yt-dlp, or gallery-dl for
   pictures and posts) connects to that site, as your browser would, to read the video, pictures or post and download
   them. Each site has its own privacy policy.
-- **SponsorBlock**, only when you tick **Cut sponsors** or make a PiP video of a YouTube video: the app sends the
-  video's ID to `sponsor.ajay.app` to learn which parts viewers marked as sponsors. Nothing else is sent.
+- **SponsorBlock**, for YouTube videos only, when **Cut sponsors** is ticked (it is, for every YouTube link: untick
+  it for a video you don't want checked) or you make a PiP video: when you analyze one video, and when it downloads
+  unless SponsorBlock already said it has nothing to cut, the app sends the video's ID to `sponsor.ajay.app` to learn
+  which parts viewers marked as sponsors. Nothing else is sent.
 - **Its tools' download sites**, to download and update what it needs: GitHub (yt-dlp, aria2, ffmpeg from gyan.dev's
   GitHub mirror, and new versions of Media Downloader itself), www.gyan.dev (ffmpeg, when GitHub can't be read),
   dl.deno.land (Deno, for YouTube) and codeberg.org (gallery-dl, for pictures and posts). They only learn that a copy
   is being downloaded, as for any download from your browser. Turn off update checks in Settings if you don't want the
-  app to check for new versions when it starts.
+  app to check for new versions, and update yt-dlp, when it starts.
 - **A few well-known sites** (www.google.com, github.com, www.microsoft.com, www.cloudflare.com, www.bing.com,
   www.baidu.com and www.apple.com, asked together; the first to answer is used), to learn today's date for the free
   days and the license (from the date on the answer, not your PC's clock). This is a plain request for the home
@@ -79,7 +81,7 @@ Everything stays on your PC:
 - The download queue (each download's link, title, options and where it was saved), in
   `%APPDATA%\MediaDownloader\queue.json`, so it comes back the next time the app starts. Remove downloads from the
   list, or press Clear finished, to take them out of it.
-- ffmpeg, Deno, gallery-dl and aria2, in `%LOCALAPPDATA%\MediaDownloader`, with the cookies (above): pasted cookies,
+- yt-dlp, ffmpeg, Deno, gallery-dl and aria2, in `%LOCALAPPDATA%\MediaDownloader`, with the cookies (above): pasted cookies,
   the sites you signed in to, and the extension's while the app is open.
 - Your license key, in `%LOCALAPPDATA%\MediaDownloader\license.dat`, encrypted for your Windows user.
 - Your downloads, in the folder you choose.
@@ -94,7 +96,7 @@ Everything stays on your PC:
 2. Uninstall Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept (pasted cookies,
    the sites you signed in to, and the extension's) and the downloads' logs.
 3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queue, the list of what you downloaded) and
-   `%LOCALAPPDATA%\MediaDownloader` (ffmpeg, Deno, gallery-dl, aria2 and your license key). Uninstalling leaves them,
+   `%LOCALAPPDATA%\MediaDownloader` (yt-dlp, ffmpeg, Deno, gallery-dl, aria2 and your license key). Uninstalling leaves them,
    so a reinstall keeps your settings and license.
 
 Your downloads stay in their folder until you delete them.
