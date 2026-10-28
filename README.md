@@ -39,6 +39,7 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **Burned-in subtitles** | Or draw the subtitles on the picture (Settings > Subtitles in the video), so they show on any player or site. |
 | **Skip the sponsors** | On YouTube, cut out the sponsor, intro and "subscribe" parts viewers have marked. |
 | **PiP video** | Also make a picture-in-picture version of a download, ready to post. |
+| **Faster on your graphics card** | Converting to MP4 H.264, burning in subtitles and making PiP videos encode the whole video again: Media Downloader does it on your NVIDIA, AMD or Intel graphics card when that is faster than the processor, and on the processor otherwise (and always for the subtitles of WebM videos). Files made on the card can be a little larger. Settings > **Encoding** shows what it found, and can turn it off. Downloading itself doesn't encode anything, so it doesn't need the card. |
 | **Thumbnails and subtitles on their own** | Tools > **Thumbnail saver** saves a video's cover picture, biggest first; **Subtitle extractor** saves its subtitles as SRT, VTT, ASS or LRC. |
 | **Live chat archiver** | Tools > **Live chat archiver** saves a YouTube live stream's or premiere's chat replay: every message with its time, author, Super Chats and memberships. Filter it by words (or a regular expression), and save it as CSV for Excel or JSON. Double-click a message to watch that moment. |
 | **Bilingual subtitles** | In the Subtitle extractor, tick two languages and **Bilingual**: one file shows each line in both, the language you choose on top, the other under it. For learning a language, or watching together. |
@@ -97,6 +98,8 @@ Licenses are available for a period of time (for example monthly or yearly), for
 - Windows 10 or Windows 11 (64-bit)
 - An internet connection
 - About 500 MB of free disk space, plus room for your downloads
+- Optional: an NVIDIA, AMD or Intel graphics card with an up-to-date driver, for faster converting (see **Faster on
+  your graphics card**)
 
 ## Installing
 
