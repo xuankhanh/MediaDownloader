@@ -1,19 +1,24 @@
 # Builds whisper.cpp for Windows with Vulkan, so Media Downloader's Make from speech can run on NVIDIA, AMD and Intel
 # graphics cards: whisper.cpp publishes CUDA builds only (NVIDIA, and without the cuBLAS they need). The same options as
 # its official Windows build otherwise: the backends load at run time (the graphics card when Vulkan finds one, else the
-# processor), with a build for each processor generation. Run by hand (Actions > whisper.cpp Vulkan build > Run
-# workflow) when a whisper.cpp version is worth taking. The zip is kept as the run's artifact, and put on a draft
-# pre-release whisper-vulkan-<version>: Media Downloader skips drafts, so nobody gets it until it is tested and
-# published (Releases > the draft > Edit > Publish release). Published, every copy of the app takes it, as the newest.
+# processor), with a build for each processor generation.
+# Every Monday it looks whether whisper.cpp has a version not built yet, and builds that one; or run it by hand (Actions >
+# whisper.cpp Vulkan build > Run workflow), for a version, or empty for the newest. The zip is kept as the run's artifact,
+# and put on a draft pre-release whisper-vulkan-<version>: Media Downloader skips drafts, so nobody gets it until it is
+# tested and published (Releases > the draft > Edit > Publish release). Published, every copy of the app takes it, as the
+# newest.
 name: whisper.cpp Vulkan build
 
 on:
+  schedule:
+    # Mondays 01:00 UTC (08:00 in Vietnam)
+    - cron: '0 1 * * 1'
   workflow_dispatch:
     inputs:
       whisper_version:
-        description: whisper.cpp tag to build
-        required: true
-        default: v1.9.5
+        description: whisper.cpp tag to build (v1.9.6), or empty for its newest release when not built yet
+        required: false
+        default: ''
       vulkan_sdk:
         description: Vulkan SDK version (LunarG)
         required: true
@@ -23,20 +28,59 @@ permissions:
   # To make the draft pre-release
   contents: write
 
+env:
+  # The Vulkan SDK of a scheduled run (a run by hand says its own)
+  VULKAN_SDK_VERSION: ${{ inputs.vulkan_sdk || '1.4.363.0' }}
+
 jobs:
-  build:
-    runs-on: windows-2022
+  # Which version to build, and whether: one typed by hand is always built; otherwise whisper.cpp's newest release, unless
+  # its draft or pre-release is there already
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.pick.outputs.version }}
+      build: ${{ steps.pick.outputs.build }}
     steps:
-      - name: Get whisper.cpp ${{ inputs.whisper_version }}
+      - name: Pick the version
+        id: pick
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TYPED: ${{ inputs.whisper_version }}
+        run: |
+          if [ -n "$TYPED" ]; then
+            echo "version=$TYPED" >> "$GITHUB_OUTPUT"
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            echo "Building $TYPED, as asked"
+            exit 0
+          fi
+          version=$(gh release view --repo ggml-org/whisper.cpp --json tagName --jq .tagName)
+          if [ -z "$version" ]; then echo "whisper.cpp's newest release couldn't be read"; exit 1; fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if gh release view "whisper-vulkan-$version" --repo "${{ github.repository }}" > /dev/null 2>&1; then
+            echo "build=false" >> "$GITHUB_OUTPUT"
+            echo "whisper.cpp's newest is $version, and whisper-vulkan-$version is there already (draft or published): nothing to build"
+          else
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            echo "whisper.cpp's newest is $version, not built yet: building it"
+          fi
+
+  build:
+    needs: check
+    if: needs.check.outputs.build == 'true'
+    runs-on: windows-2022
+    env:
+      WHISPER_VERSION: ${{ needs.check.outputs.version }}
+    steps:
+      - name: Get whisper.cpp ${{ needs.check.outputs.version }}
         uses: actions/checkout@v4
         with:
           repository: ggml-org/whisper.cpp
-          ref: ${{ inputs.whisper_version }}
+          ref: ${{ needs.check.outputs.version }}
 
-      - name: Install the Vulkan SDK ${{ inputs.vulkan_sdk }}
+      - name: Install the Vulkan SDK ${{ env.VULKAN_SDK_VERSION }}
         shell: pwsh
         run: |
-          $version = '${{ inputs.vulkan_sdk }}'
+          $version = $env:VULKAN_SDK_VERSION
           $root = "C:\VulkanSDK\$version"
           curl.exe -L --fail -o vulkansdk.exe "https://sdk.lunarg.com/sdk/download/$version/windows/vulkansdk-windows-X64-$version.exe"
           Start-Process -Wait -FilePath .\vulkansdk.exe -ArgumentList '--root', $root, '--accept-licenses', '--default-answer', '--confirm-command', 'install'
@@ -56,14 +100,14 @@ jobs:
           New-Item -ItemType Directory $out | Out-Null
           Copy-Item build\bin\Release\whisper-cli.exe, build\bin\Release\*.dll $out
           Copy-Item LICENSE $out\LICENSE-whisper.cpp.txt
-          '${{ inputs.whisper_version }}' | Set-Content $out\version.txt
+          $env:WHISPER_VERSION | Set-Content $out\version.txt
           Compress-Archive -Path "$out\*" -DestinationPath whisper-vulkan-x64.zip
           Get-ChildItem $out | Format-Table Name, Length
 
       - name: Keep the zip
         uses: actions/upload-artifact@v4
         with:
-          name: whisper-vulkan-x64-${{ inputs.whisper_version }}
+          name: whisper-vulkan-x64-${{ needs.check.outputs.version }}
           path: whisper-vulkan-x64.zip
 
       # A draft, not published: the zip replaced when a draft of that tag is there already (a build run again), but a
@@ -73,14 +117,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tag = 'whisper-vulkan-${{ inputs.whisper_version }}'
+          $tag = "whisper-vulkan-$env:WHISPER_VERSION"
           $repo = '${{ github.repository }}'
           $existing = gh release view $tag --repo $repo --json isDraft 2>$null | ConvertFrom-Json
           if ($existing -and -not $existing.isDraft) { throw "$tag is published already: delete it on GitHub first to build it again" }
           if ($existing) {
             gh release upload $tag whisper-vulkan-x64.zip --repo $repo --clobber
           } else {
-            $notes = "Not a Media Downloader release. whisper.cpp ${{ inputs.whisper_version }} built for Windows x64 with Vulkan (Vulkan SDK ${{ inputs.vulkan_sdk }}) by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, for Media Downloader's Make from speech: it runs on NVIDIA, AMD and Intel graphics cards, and on the processor. whisper.cpp is MIT-licensed (LICENSE-whisper.cpp.txt in the zip).`n`nA draft: test the zip, then Publish release. Every copy of Media Downloader then takes it, as the newest whisper-vulkan pre-release."
-            gh release create $tag whisper-vulkan-x64.zip --repo $repo --draft --prerelease --target ${{ github.sha }} --title "whisper.cpp ${{ inputs.whisper_version }} with Vulkan (for Make from speech)" --notes $notes
+            $notes = "Not a Media Downloader release. whisper.cpp $env:WHISPER_VERSION built for Windows x64 with Vulkan (Vulkan SDK $env:VULKAN_SDK_VERSION) by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, for Media Downloader's Make from speech: it runs on NVIDIA, AMD and Intel graphics cards, and on the processor. whisper.cpp is MIT-licensed (LICENSE-whisper.cpp.txt in the zip).`n`nA draft: test the zip, then Publish release. Every copy of Media Downloader then takes it, as the newest whisper-vulkan pre-release."
+            gh release create $tag whisper-vulkan-x64.zip --repo $repo --draft --prerelease --target ${{ github.sha }} --title "whisper.cpp $env:WHISPER_VERSION with Vulkan (for Make from speech)" --notes $notes
           }
           if ($LASTEXITCODE -ne 0) { throw "The draft pre-release couldn't be made" }
