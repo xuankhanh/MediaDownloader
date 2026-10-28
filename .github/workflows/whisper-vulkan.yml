@@ -2,7 +2,9 @@
 # graphics cards: whisper.cpp publishes CUDA builds only (NVIDIA, and without the cuBLAS they need). The same options as
 # its official Windows build otherwise: the backends load at run time (the graphics card when Vulkan finds one, else the
 # processor), with a build for each processor generation. Run by hand (Actions > whisper.cpp Vulkan build > Run
-# workflow) when a whisper.cpp version is worth taking; the zip is kept as the run's artifact.
+# workflow) when a whisper.cpp version is worth taking. The zip is kept as the run's artifact, and put on a draft
+# pre-release whisper-vulkan-<version>: Media Downloader skips drafts, so nobody gets it until it is tested and
+# published (Releases > the draft > Edit > Publish release). Published, every copy of the app takes it, as the newest.
 name: whisper.cpp Vulkan build
 
 on:
@@ -18,7 +20,8 @@ on:
         default: 1.4.363.0
 
 permissions:
-  contents: read
+  # To make the draft pre-release
+  contents: write
 
 jobs:
   build:
@@ -62,3 +65,22 @@ jobs:
         with:
           name: whisper-vulkan-x64-${{ inputs.whisper_version }}
           path: whisper-vulkan-x64.zip
+
+      # A draft, not published: the zip replaced when a draft of that tag is there already (a build run again), but a
+      # published one is left as it is, as copies of the app may have it
+      - name: Put it on a draft pre-release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = 'whisper-vulkan-${{ inputs.whisper_version }}'
+          $repo = '${{ github.repository }}'
+          $existing = gh release view $tag --repo $repo --json isDraft 2>$null | ConvertFrom-Json
+          if ($existing -and -not $existing.isDraft) { throw "$tag is published already: delete it on GitHub first to build it again" }
+          if ($existing) {
+            gh release upload $tag whisper-vulkan-x64.zip --repo $repo --clobber
+          } else {
+            $notes = "Not a Media Downloader release. whisper.cpp ${{ inputs.whisper_version }} built for Windows x64 with Vulkan (Vulkan SDK ${{ inputs.vulkan_sdk }}) by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, for Media Downloader's Make from speech: it runs on NVIDIA, AMD and Intel graphics cards, and on the processor. whisper.cpp is MIT-licensed (LICENSE-whisper.cpp.txt in the zip).`n`nA draft: test the zip, then Publish release. Every copy of Media Downloader then takes it, as the newest whisper-vulkan pre-release."
+            gh release create $tag whisper-vulkan-x64.zip --repo $repo --draft --prerelease --target ${{ github.sha }} --title "whisper.cpp ${{ inputs.whisper_version }} with Vulkan (for Make from speech)" --notes $notes
+          }
+          if ($LASTEXITCODE -ne 0) { throw "The draft pre-release couldn't be made" }
