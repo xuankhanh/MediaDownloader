@@ -1,0 +1,64 @@
+# Builds whisper.cpp for Windows with Vulkan, so Media Downloader's Make from speech can run on NVIDIA, AMD and Intel
+# graphics cards: whisper.cpp publishes CUDA builds only (NVIDIA, and without the cuBLAS they need). The same options as
+# its official Windows build otherwise: the backends load at run time (the graphics card when Vulkan finds one, else the
+# processor), with a build for each processor generation. Run by hand (Actions > whisper.cpp Vulkan build > Run
+# workflow) when a whisper.cpp version is worth taking; the zip is kept as the run's artifact.
+name: whisper.cpp Vulkan build
+
+on:
+  workflow_dispatch:
+    inputs:
+      whisper_version:
+        description: whisper.cpp tag to build
+        required: true
+        default: v1.9.5
+      vulkan_sdk:
+        description: Vulkan SDK version (LunarG)
+        required: true
+        default: 1.4.363.0
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - name: Get whisper.cpp ${{ inputs.whisper_version }}
+        uses: actions/checkout@v4
+        with:
+          repository: ggml-org/whisper.cpp
+          ref: ${{ inputs.whisper_version }}
+
+      - name: Install the Vulkan SDK ${{ inputs.vulkan_sdk }}
+        shell: pwsh
+        run: |
+          $version = '${{ inputs.vulkan_sdk }}'
+          $root = "C:\VulkanSDK\$version"
+          curl.exe -L --fail -o vulkansdk.exe "https://sdk.lunarg.com/sdk/download/$version/windows/vulkansdk-windows-X64-$version.exe"
+          Start-Process -Wait -FilePath .\vulkansdk.exe -ArgumentList '--root', $root, '--accept-licenses', '--default-answer', '--confirm-command', 'install'
+          if (-not (Test-Path "$root\Bin\glslc.exe")) { throw "The Vulkan SDK didn't install: no glslc.exe in $root\Bin" }
+          "VULKAN_SDK=$root" >> $env:GITHUB_ENV
+          "$root\Bin" >> $env:GITHUB_PATH
+
+      - name: Build
+        run: |
+          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DGGML_VULKAN=ON -DGGML_BACKEND_DL=ON -DGGML_CPU_ALL_VARIANTS=ON -DGGML_NATIVE=OFF -DWHISPER_BUILD_TESTS=OFF -DWHISPER_SDL2=OFF -DBUILD_SHARED_LIBS=ON
+          cmake --build build --config Release -j 4
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $out = 'whisper-vulkan'
+          New-Item -ItemType Directory $out | Out-Null
+          Copy-Item build\bin\Release\whisper-cli.exe, build\bin\Release\*.dll $out
+          Copy-Item LICENSE $out\LICENSE-whisper.cpp.txt
+          '${{ inputs.whisper_version }}' | Set-Content $out\version.txt
+          Compress-Archive -Path "$out\*" -DestinationPath whisper-vulkan-x64.zip
+          Get-ChildItem $out | Format-Table Name, Length
+
+      - name: Keep the zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-vulkan-x64-${{ inputs.whisper_version }}
+          path: whisper-vulkan-x64.zip
