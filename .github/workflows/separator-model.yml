@@ -2,7 +2,7 @@
 # (Watcharasupat, Wu and Orife, CC BY-SA 4.0) converted to ONNX by separator-model/bandit_export.py, which checks it
 # against the model itself, and with onnxruntime 1.24.4 (the version the app downloads) against PyTorch: any of it off
 # fails the run before anything is released.
-# Every Monday it looks whether BandIt has a new checkpoint (a new version of its Zenodo record) or new model code (a new
+# Once a month it looks whether BandIt has a new checkpoint (a new version of its Zenodo record) or new model code (a new
 # commit of kwatcharasupat/bandit-v2), against what the newest separator-models-v<n> release was made from (its notes'
 # "Source:" line), and makes the model again when it has; or run it by hand (Actions > Sound separator model > Run
 # workflow), which always makes it. Each new model goes on a pre-release of its own, separator-models-v<n+1>: the app
@@ -15,8 +15,8 @@ name: Sound separator model
 
 on:
   schedule:
-    # Mondays 02:00 UTC (09:00 in Vietnam), after the whisper.cpp build
-    - cron: '0 2 * * 1'
+    # The 1st of each month, 02:00 UTC (09:00 in Vietnam): BandIt changes rarely
+    - cron: '0 2 1 * *'
   workflow_dispatch:
     inputs:
       zenodo_record:
