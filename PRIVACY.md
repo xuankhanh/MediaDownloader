@@ -2,7 +2,7 @@
 
 **Media Downloader** (the Windows app, and its browser extension for Chrome, Edge and Brave)
 
-Last updated: October 28, 2026
+Last updated: October 29, 2026
 
 Media Downloader is a Windows desktop app. It runs on your own PC. It has no account, we don't run a server that
 receives your data, and it doesn't collect or send any usage or tracking information. We don't sell or share your data
@@ -22,6 +22,22 @@ with anyone.
   dl.deno.land (Deno, for YouTube) and codeberg.org (gallery-dl, for pictures and posts). They only learn that a copy
   is being downloaded, as for any download from your browser. Turn off update checks in Settings if you don't want the
   app to check for new versions, and update yt-dlp, when it starts.
+- **The download sites of the tools that work on sound**, only when you use them, the first time and when a newer
+  version is out:
+  - **Make from speech** (Subtitle extractor): the speech recognizer (whisper.cpp) from GitHub, and its models from
+    huggingface.co; translating into a language other than English also downloads llama.cpp from GitHub and a
+    translation model (Qwen3) from huggingface.co. When Windows lacks it, it offers Microsoft's Visual C++ Runtime from
+    microsoft.com, which you install yourself.
+  - **Separate voice, music and effects** (Tools): ONNX Runtime and DirectML, Microsoft's, from nuget.org, and the
+    separator's model from GitHub.
+
+  To learn whether a newer version is out, the app asks GitHub's API (api.github.com) for the list of this repository's
+  releases, once each time the app runs and you use one of them. As with the other tools, these sites only learn that
+  a copy is being downloaded or the list read.
+
+  **The sound itself never leaves your PC**: what is said is heard and written as subtitles, translated, and taken
+  apart into voice, music and effects on your PC, by these tools. Nothing of the video, its sound or the subtitles is
+  sent anywhere.
 - **A few well-known sites** (www.google.com, github.com, www.microsoft.com, www.cloudflare.com, www.bing.com,
   www.baidu.com and www.apple.com, asked together; the first to answer is used), to learn today's date for the free
   days and the license (from the date on the answer, not your PC's clock). This is a plain request for the home
@@ -83,6 +99,11 @@ Everything stays on your PC:
   list, or press Clear finished, to take them out of it.
 - yt-dlp, ffmpeg, Deno, gallery-dl and aria2, in `%LOCALAPPDATA%\MediaDownloader`, with the cookies (above): pasted cookies,
   the sites you signed in to, and the extension's while the app is open.
+- The tools that work on sound, when you have used them, in `%LOCALAPPDATA%\MediaDownloader` too: the speech recognizer
+  and its models (`whisper`, `whisper-models`), the translator (`llama`), and the separator and its model
+  (`onnxruntime`, `separator-models`). While they work, what they work on is kept for a while: a link's sound,
+  downloaded for them, in Windows' temporary folder, and the sound and the subtitles in a folder of their own there
+  (`whisper\work`, `llama\work`, `separator-work`). All of it is deleted when they finish.
 - Your license key, in `%LOCALAPPDATA%\MediaDownloader\license.dat`, encrypted for your Windows user.
 - Your downloads, in the folder you choose.
 - The downloads' logs (what **Show log** shows: each download's link, title, where it was saved and what yt-dlp
@@ -96,7 +117,8 @@ Everything stays on your PC:
 2. Uninstall Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept (pasted cookies,
    the sites you signed in to, and the extension's) and the downloads' logs.
 3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queue, the list of what you downloaded) and
-   `%LOCALAPPDATA%\MediaDownloader` (yt-dlp, ffmpeg, Deno, gallery-dl, aria2 and your license key). Uninstalling leaves them,
+   `%LOCALAPPDATA%\MediaDownloader` (yt-dlp, ffmpeg, Deno, gallery-dl, aria2, the tools that work on sound and their
+   models, and your license key). Uninstalling leaves them,
    so a reinstall keeps your settings and license.
 
 Your downloads stay in their folder until you delete them.
