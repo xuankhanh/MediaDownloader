@@ -28,7 +28,7 @@ with anyone.
     huggingface.co; translating into a language other than English also downloads llama.cpp from GitHub and a
     translation model (Qwen3) from huggingface.co. When Windows lacks it, it offers Microsoft's Visual C++ Runtime from
     microsoft.com, which you install yourself.
-  - **Separate voice, music and effects** (Tools): ONNX Runtime and DirectML, Microsoft's, from nuget.org, and the
+  - **Separate voice, music and sound effects** (Tools): ONNX Runtime and DirectML, Microsoft's, from nuget.org, and the
     separator's model from GitHub.
   - **Summarize** (Hashtags, description and summary): the translator, as for Make from speech (llama.cpp from GitHub,
     its model from huggingface.co), and the speech recognizer too for a video without subtitles.
@@ -38,8 +38,13 @@ with anyone.
   a copy is being downloaded or the list read.
 
   **The sound itself never leaves your PC**: what is said is heard and written as subtitles, translated, summarized,
-  and taken apart into voice, music and effects on your PC, by these tools. Nothing of the video, its sound, its
+  and taken apart into voice, music and sound effects on your PC, by these tools. Nothing of the video, its sound, its
   subtitles or its summary is sent anywhere.
+
+  **A video file on your PC** that you open in the Tools (Subtitle extractor, Hashtags, description and summary,
+  Frame extractor, Separate voice, music and sound effects) is read where it is, by these tools and ffmpeg on your PC:
+  it isn't uploaded or copied anywhere, and nothing is downloaded for it but the tools above. What they make of it
+  goes in the folder you choose.
 - **A few well-known sites** (www.google.com, github.com, www.microsoft.com, www.cloudflare.com, www.bing.com,
   www.baidu.com and www.apple.com, asked together; the first to answer is used), to learn today's date for the free
   days and the license (from the date on the answer, not your PC's clock). This is a plain request for the home
