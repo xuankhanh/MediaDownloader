@@ -3,11 +3,13 @@
 # its official Windows build otherwise: the backends load at run time (the graphics card when Vulkan finds one, else the
 # processor), with a build for each processor generation.
 # Every Monday it looks whether whisper.cpp has a version not built yet, and builds that one; or run it by hand (Actions >
-# whisper.cpp Vulkan build > Run workflow), for a version, or empty for the newest. The zip is kept as the run's artifact,
-# and put on a draft pre-release whisper-vulkan-<version>: Media Downloader skips drafts, so nobody gets it until it is
-# tested and published (Releases > the draft > Edit > Publish release). Published, every copy of the app takes it, as the
-# newest. A run by hand with Publish ticked publishes it itself, without the draft (a scheduled run always makes one).
-# Always a pre-release, never the latest release: the app's own update check reads that one.
+# whisper.cpp Vulkan build > Run workflow), for a version, or empty for the newest. The zip is tested: its whisper-cli
+# hears whisper.cpp's own sample on the processor, as the app runs it (the runner has no graphics card). It is kept as the
+# run's artifact, and put on a pre-release whisper-vulkan-<version>: published by a scheduled run, or by hand with Publish
+# ticked; else a draft, which Media Downloader skips, until it is published by hand (Releases > the draft > Edit >
+# Publish release). A zip that fails the test is only ever a draft, and the run fails, so it is told. Published, every
+# copy of the app takes it, as the newest. Always a pre-release, never the latest release: the app's own update check
+# reads that one.
 name: whisper.cpp Vulkan build
 
 on:
@@ -25,7 +27,7 @@ on:
         required: true
         default: 1.4.363.0
       publish:
-        description: Publish it straight away, not as a draft to test first (every copy of the app then takes it)
+        description: Publish it straight away when it passes the test, not as a draft (every copy of the app then takes it)
         type: boolean
         required: false
         default: false
@@ -110,20 +112,36 @@ jobs:
           Compress-Archive -Path "$out\*" -DestinationPath whisper-vulkan-x64.zip
           Get-ChildItem $out | Format-Table Name, Length
 
+      # As the app runs it, on the processor: the zip's whisper-cli with the voice detector hears whisper.cpp's sample
+      # (JFK, in English) with the smallest English model. A zip that can't is never published
+      - name: Test it
+        id: test
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          curl.exe -L --fail --retry 3 -o ggml-tiny.en.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin
+          curl.exe -L --fail --retry 3 -o ggml-silero-v6.2.0.bin https://huggingface.co/ggml-org/whisper-vad/resolve/main/ggml-silero-v6.2.0.bin
+          & .\whisper-vulkan\whisper-cli.exe -m ggml-tiny.en.bin -f samples\jfk.wav -l en -ng -otxt -of jfk --vad -vm ggml-silero-v6.2.0.bin
+          if ($LASTEXITCODE -ne 0) { throw "whisper-cli stopped with exit code $LASTEXITCODE" }
+          $text = Get-Content jfk.txt -Raw
+          "Heard: $text"
+          if ($text -notmatch 'ask not what your country can do for you') { throw "whisper-cli didn't hear the sample right" }
+
       - name: Keep the zip
         uses: actions/upload-artifact@v4
         with:
           name: whisper-vulkan-x64-${{ needs.check.outputs.version }}
           path: whisper-vulkan-x64.zip
 
-      # A draft, unless Publish was ticked: the zip replaced when a draft of that tag is there already (a build run again),
-      # and that draft published when asked; a published one is left as it is, as copies of the app may have it
+      # Published by a scheduled run, or by hand with Publish ticked, when the test passed; else a draft. The zip replaced
+      # when a draft of that tag is there already (a build run again), and that draft published when asked; a published
+      # one is left as it is, as copies of the app may have it
       - name: Put it on a pre-release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-          # A scheduled run has no inputs: a draft
-          PUBLISH: ${{ inputs.publish && 'true' || 'false' }}
+          PUBLISH: ${{ (github.event_name == 'schedule' || inputs.publish) && steps.test.outcome == 'success' && 'true' || 'false' }}
+          TEST: ${{ steps.test.outcome }}
         run: |
           $tag = "whisper-vulkan-$env:WHISPER_VERSION"
           $repo = '${{ github.repository }}'
@@ -137,13 +155,21 @@ jobs:
           } else {
             $notes = "Not a Media Downloader release. whisper.cpp $env:WHISPER_VERSION built for Windows x64 with Vulkan (Vulkan SDK $env:VULKAN_SDK_VERSION) by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, for Media Downloader's Make from speech: it runs on NVIDIA, AMD and Intel graphics cards, and on the processor. whisper.cpp is MIT-licensed (LICENSE-whisper.cpp.txt in the zip).`n`n"
             if ($publish) {
-              $notes += "Published by the run, as asked: every copy of Media Downloader takes it, as the newest whisper-vulkan pre-release."
+              $notes += "Published by the run once its whisper-cli heard whisper.cpp's sample: every copy of Media Downloader takes it, as the newest whisper-vulkan pre-release."
               $draft = @()
             } else {
-              $notes += "A draft: test the zip, then Publish release. Every copy of Media Downloader then takes it, as the newest whisper-vulkan pre-release."
+              $notes += if ($env:TEST -ne 'success') { "A draft, as it failed the run's test (whisper-cli hearing whisper.cpp's sample): look at the run before publishing it. " } else { "A draft: " }
+              $notes += "test the zip, then Publish release. Every copy of Media Downloader then takes it, as the newest whisper-vulkan pre-release."
               $draft = @('--draft')
             }
             gh release create $tag whisper-vulkan-x64.zip --repo $repo @draft --prerelease --latest=false --target ${{ github.sha }} --title "whisper.cpp $env:WHISPER_VERSION with Vulkan (for Make from speech)" --notes $notes
           }
           if ($LASTEXITCODE -ne 0) { throw "The pre-release couldn't be made" }
           gh release view $tag --repo $repo --json isDraft,isPrerelease --jq '"draft: \(.isDraft), pre-release: \(.isPrerelease)"'
+
+      # The run fails when the test did, so it is told (GitHub's email), with the zip kept as a draft
+      - name: Fail when the test did
+        if: steps.test.outcome != 'success'
+        shell: pwsh
+        run: |
+          throw "The zip failed its test (Test it): it was left as a draft, not published"
