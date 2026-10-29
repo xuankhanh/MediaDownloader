@@ -87,11 +87,20 @@ jobs:
             # A draft is made again in its place; a published one is never changed: the next number
             if [ "$draft" = true ]; then tag="$newest_tag"; else tag="$RELEASE_PREFIX$((n + 1))"; fi
           fi
+          # And the newest published one's: a model the same as it updates its Source: line, not a draft's, which is
+          # left as it was (made from an older source)
+          published=$(gh release list --repo "$repo" --limit 100 --json tagName,isDraft \
+            --jq "[.[] | select(.isDraft | not) | select(.tagName | test(\"^${RELEASE_PREFIX}[0-9]+\$\")) | .n = (.tagName | ltrimstr(\"$RELEASE_PREFIX\") | tonumber)] | max_by(.n) // empty | .tagName")
+          published_from=""
+          if [ -n "$published" ]; then
+            published_from=$(gh release view "$published" --repo "$repo" --json body --jq .body | grep -oE 'Source: checkpoint [0-9a-f]+, bandit-v2 [0-9a-f]+' | sed 's/^Source: //' || true)
+          fi
 
           build=true
-          if [ "${{ github.event_name }}" = schedule ] && [ "$source" = "$made_from" ]; then build=false; fi
+          if [ "${{ github.event_name }}" = schedule ] && { [ "$source" = "$made_from" ] || [ "$source" = "$published_from" ]; }; then build=false; fi
           echo "BandIt now: Zenodo record $record, $source"
           echo "Newest release: ${newest:-none}, made from: ${made_from:-not said}"
+          echo "Newest published: ${published:-none}, made from: ${published_from:-not said}"
           echo "Build: $build, as $tag"
           { echo "build=$build"; echo "tag=$tag"; echo "record=$record"; echo "checkpoint_url=$url"
             echo "checkpoint_md5=$md5"; echo "commit=$commit"; echo "source=$source"; } >> "$GITHUB_OUTPUT"
