@@ -30,14 +30,16 @@ with anyone.
     microsoft.com, which you install yourself.
   - **Separate voice, music and effects** (Tools): ONNX Runtime and DirectML, Microsoft's, from nuget.org, and the
     separator's model from GitHub.
+  - **Summarize** (Hashtags, description and summary): the translator, as for Make from speech (llama.cpp from GitHub,
+    its model from huggingface.co), and the speech recognizer too for a video without subtitles.
 
   To learn whether a newer version is out, the app asks GitHub's API (api.github.com) for the list of this repository's
   releases, once each time the app runs and you use one of them. As with the other tools, these sites only learn that
   a copy is being downloaded or the list read.
 
-  **The sound itself never leaves your PC**: what is said is heard and written as subtitles, translated, and taken
-  apart into voice, music and effects on your PC, by these tools. Nothing of the video, its sound or the subtitles is
-  sent anywhere.
+  **The sound itself never leaves your PC**: what is said is heard and written as subtitles, translated, summarized,
+  and taken apart into voice, music and effects on your PC, by these tools. Nothing of the video, its sound, its
+  subtitles or its summary is sent anywhere.
 - **A few well-known sites** (www.google.com, github.com, www.microsoft.com, www.cloudflare.com, www.bing.com,
   www.baidu.com and www.apple.com, asked together; the first to answer is used), to learn today's date for the free
   days and the license (from the date on the answer, not your PC's clock). This is a plain request for the home
@@ -102,8 +104,10 @@ Everything stays on your PC:
 - The tools that work on sound, when you have used them, in `%LOCALAPPDATA%\MediaDownloader` too: the speech recognizer
   and its models (`whisper`, `whisper-models`), the translator (`llama`), and the separator and its model
   (`onnxruntime`, `separator-models`). While they work, what they work on is kept for a while: a link's sound,
-  downloaded for them, in Windows' temporary folder, and the sound and the subtitles in a folder of their own there
-  (`whisper\work`, `llama\work`, `separator-work`). All of it is deleted when they finish.
+  downloaded for them, in Windows' temporary folder, and the sound in a folder of their own there (`whisper\work`,
+  `separator-work`). All of it is deleted when they finish. The translator gets the subtitles' text from the app over
+  this PC's own connection (127.0.0.1), which nothing outside the PC can reach, and runs only while it translates or
+  summarizes.
 - Your license key, in `%LOCALAPPDATA%\MediaDownloader\license.dat`, encrypted for your Windows user.
 - Your downloads, in the folder you choose.
 - The downloads' logs (what **Show log** shows: each download's link, title, where it was saved and what yt-dlp
