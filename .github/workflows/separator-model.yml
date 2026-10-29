@@ -1,0 +1,112 @@
+# Makes the model of Media Downloader's Tools > Separate voice, music and effects: BandIt v2's multilingual checkpoint
+# (Watcharasupat, Wu and Orife, CC BY-SA 4.0) converted to ONNX by separator-model/bandit_export.py, which checks the
+# ONNX against the model itself with onnxruntime 1.24.4, the version the app downloads, and fails the run when it is off.
+# Run it by hand (Actions > Sound separator model > Run workflow): nothing it reads changes by itself, as the checkpoint
+# and BandIt's code are pinned. The ONNX is kept as the run's artifact, and put on a draft pre-release: Media Downloader
+# downloads it from SoundSeparator.Install.cs's ModelUrl (releases/download/separator-models-v1/bandit-v2-multi.onnx)
+# once it is published (Releases > the draft > Edit > Publish release). A model made again under another release name
+# (separator-models-v2) needs ModelUrl and ModelSize changed in the app, and reaches only copies of that version: one
+# already downloaded isn't downloaded again.
+name: Sound separator model
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Release to put it on (separator-models-v1 is the one the app downloads)
+        required: true
+        default: separator-models-v1
+      bandit_ref:
+        description: Commit of kwatcharasupat/bandit-v2 whose model code is used
+        required: true
+        default: d5563d9031e95fdaa3e5a73d5020b9a0df61adb6
+
+permissions:
+  # To make the draft pre-release
+  contents: write
+
+env:
+  # BandIt v2's multilingual checkpoint on Zenodo, and its MD5 as Zenodo lists it
+  CHECKPOINT_URL: https://zenodo.org/records/12701995/files/checkpoint-multi.ckpt?download=1
+  CHECKPOINT_MD5: fea2868787551b0cff36cfcf7c3622a3
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get this repository (the script)
+        uses: actions/checkout@v4
+
+      - name: Get BandIt v2's code at ${{ inputs.bandit_ref }}
+        uses: actions/checkout@v4
+        with:
+          repository: kwatcharasupat/bandit-v2
+          ref: ${{ inputs.bandit_ref }}
+          path: bandit-v2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # PyTorch for the processor (no graphics card on the runner, none needed); onnxruntime of the app's version
+      - name: Install PyTorch, ONNX and onnxruntime
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0 torchaudio
+          python -m pip install numpy onnx onnxscript tqdm onnxruntime==1.24.4
+          python -m pip freeze | grep -iE '^(torch|torchaudio|onnx|onnxscript|onnxruntime|numpy)=='
+
+      - name: Download the checkpoint
+        run: |
+          curl -L --fail --retry 3 -o checkpoint-multi.ckpt "$CHECKPOINT_URL"
+          echo "$CHECKPOINT_MD5  checkpoint-multi.ckpt" | md5sum -c -
+
+      - name: Convert to ONNX and check it
+        run: python -I separator-model/bandit_export.py --repo bandit-v2 --ckpt checkpoint-multi.ckpt --out bandit-v2-multi.onnx --check-onnx
+
+      - name: Describe it
+        id: describe
+        run: |
+          size=$(stat -c %s bandit-v2-multi.onnx)
+          sha=$(sha256sum bandit-v2-multi.onnx | cut -d' ' -f1)
+          echo "size=$size" >> "$GITHUB_OUTPUT"
+          echo "sha256=$sha" >> "$GITHUB_OUTPUT"
+          echo "bandit-v2-multi.onnx: $size bytes (SoundSeparator.Install.cs's ModelSize), SHA-256 $sha" >> "$GITHUB_STEP_SUMMARY"
+          cat > bandit-v2-multi.NOTICE.txt <<EOF
+          bandit-v2-multi.onnx: the multilingual checkpoint (checkpoint-multi) of BandIt v2, from
+          "Remastering Divide and Remaster: A Cinematic Audio Source Separation Dataset with Multilingual Support"
+          by Karn N. Watcharasupat, Chih-Wei Wu and Iroro Orife (https://arxiv.org/abs/2407.07275),
+          from https://zenodo.org/records/12701995, converted to ONNX without changing its weights, with the model code of
+          https://github.com/kwatcharasupat/bandit-v2 at ${{ inputs.bandit_ref }}.
+          It takes a sound apart into speech, music and effects.
+          License: Creative Commons Attribution-ShareAlike 4.0 International (https://creativecommons.org/licenses/by-sa/4.0/);
+          the converted model is under the same license.
+          EOF
+
+      - name: Keep the model
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-v2-multi-onnx
+          path: |
+            bandit-v2-multi.onnx
+            bandit-v2-multi.NOTICE.txt
+
+      # A draft, not published: its files replaced when a draft of that tag is there already (a run again), but a
+      # published one is left as it is, as copies of the app may have downloaded it
+      - name: Put it on a draft pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release }}
+          SIZE: ${{ steps.describe.outputs.size }}
+          SHA256: ${{ steps.describe.outputs.sha256 }}
+        run: |
+          repo='${{ github.repository }}'
+          if draft=$(gh release view "$TAG" --repo "$repo" --json isDraft --jq .isDraft 2>/dev/null); then
+            if [ "$draft" != "true" ]; then echo "$TAG is published already: delete it on GitHub first to make it again"; exit 1; fi
+            gh release upload "$TAG" bandit-v2-multi.onnx bandit-v2-multi.NOTICE.txt --repo "$repo" --clobber
+          else
+            notes="Not a Media Downloader release. The model of Tools > Separate voice, music and effects: BandIt v2's multilingual checkpoint (Watcharasupat, Wu and Orife) converted to ONNX by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, and checked against PyTorch with onnxruntime 1.24.4. $SIZE bytes, SHA-256 $SHA256. License: CC BY-SA 4.0, as the checkpoint's (bandit-v2-multi.NOTICE.txt).
+
+          A draft: test it, then Publish release. Copies of Media Downloader whose ModelUrl names $TAG then download it the first time the separator is used."
+            gh release create "$TAG" bandit-v2-multi.onnx bandit-v2-multi.NOTICE.txt --repo "$repo" --draft --prerelease --target "${{ github.sha }}" \
+              --title "Sound separator model (BandIt v2, ONNX)" --notes "$notes"
+          fi
