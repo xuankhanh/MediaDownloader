@@ -103,7 +103,9 @@ Licenses are available for a period of time (for example monthly or yearly), for
 
 - Windows 10 or Windows 11 (64-bit)
 - An internet connection
-- About 500 MB of free disk space, plus room for your downloads
+- About 500 MB of free disk space, plus room for your downloads. The AI tools download what they need the first time
+  you use one: up to about 600 MB for Make from speech, about 5 GB for translation and Summarize, about 200 MB for
+  Separate voice, music and sound effects (about 7 GB for all of them)
 - Optional: an NVIDIA, AMD or Intel graphics card with an up-to-date driver, for faster converting (see **Faster on
   your graphics card**)
 
