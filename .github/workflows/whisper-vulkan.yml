@@ -6,7 +6,8 @@
 # whisper.cpp Vulkan build > Run workflow), for a version, or empty for the newest. The zip is kept as the run's artifact,
 # and put on a draft pre-release whisper-vulkan-<version>: Media Downloader skips drafts, so nobody gets it until it is
 # tested and published (Releases > the draft > Edit > Publish release). Published, every copy of the app takes it, as the
-# newest.
+# newest. A run by hand with Publish ticked publishes it itself, without the draft (a scheduled run always makes one).
+# Always a pre-release, never the latest release: the app's own update check reads that one.
 name: whisper.cpp Vulkan build
 
 on:
@@ -23,9 +24,14 @@ on:
         description: Vulkan SDK version (LunarG)
         required: true
         default: 1.4.363.0
+      publish:
+        description: Publish it straight away, not as a draft to test first (every copy of the app then takes it)
+        type: boolean
+        required: false
+        default: false
 
 permissions:
-  # To make the draft pre-release
+  # To make the pre-release
   contents: write
 
 env:
@@ -110,21 +116,34 @@ jobs:
           name: whisper-vulkan-x64-${{ needs.check.outputs.version }}
           path: whisper-vulkan-x64.zip
 
-      # A draft, not published: the zip replaced when a draft of that tag is there already (a build run again), but a
-      # published one is left as it is, as copies of the app may have it
-      - name: Put it on a draft pre-release
+      # A draft, unless Publish was ticked: the zip replaced when a draft of that tag is there already (a build run again),
+      # and that draft published when asked; a published one is left as it is, as copies of the app may have it
+      - name: Put it on a pre-release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
+          # A scheduled run has no inputs: a draft
+          PUBLISH: ${{ inputs.publish && 'true' || 'false' }}
         run: |
           $tag = "whisper-vulkan-$env:WHISPER_VERSION"
           $repo = '${{ github.repository }}'
           $existing = gh release view $tag --repo $repo --json isDraft 2>$null | ConvertFrom-Json
           if ($existing -and -not $existing.isDraft) { throw "$tag is published already: delete it on GitHub first to build it again" }
+          $publish = $env:PUBLISH -eq 'true'
           if ($existing) {
             gh release upload $tag whisper-vulkan-x64.zip --repo $repo --clobber
+            if ($LASTEXITCODE -ne 0) { throw "The zip couldn't be put on the draft $tag" }
+            if ($publish) { gh release edit $tag --repo $repo --draft=false --prerelease --latest=false }
           } else {
-            $notes = "Not a Media Downloader release. whisper.cpp $env:WHISPER_VERSION built for Windows x64 with Vulkan (Vulkan SDK $env:VULKAN_SDK_VERSION) by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, for Media Downloader's Make from speech: it runs on NVIDIA, AMD and Intel graphics cards, and on the processor. whisper.cpp is MIT-licensed (LICENSE-whisper.cpp.txt in the zip).`n`nA draft: test the zip, then Publish release. Every copy of Media Downloader then takes it, as the newest whisper-vulkan pre-release."
-            gh release create $tag whisper-vulkan-x64.zip --repo $repo --draft --prerelease --target ${{ github.sha }} --title "whisper.cpp $env:WHISPER_VERSION with Vulkan (for Make from speech)" --notes $notes
+            $notes = "Not a Media Downloader release. whisper.cpp $env:WHISPER_VERSION built for Windows x64 with Vulkan (Vulkan SDK $env:VULKAN_SDK_VERSION) by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, for Media Downloader's Make from speech: it runs on NVIDIA, AMD and Intel graphics cards, and on the processor. whisper.cpp is MIT-licensed (LICENSE-whisper.cpp.txt in the zip).`n`n"
+            if ($publish) {
+              $notes += "Published by the run, as asked: every copy of Media Downloader takes it, as the newest whisper-vulkan pre-release."
+              $draft = @()
+            } else {
+              $notes += "A draft: test the zip, then Publish release. Every copy of Media Downloader then takes it, as the newest whisper-vulkan pre-release."
+              $draft = @('--draft')
+            }
+            gh release create $tag whisper-vulkan-x64.zip --repo $repo @draft --prerelease --latest=false --target ${{ github.sha }} --title "whisper.cpp $env:WHISPER_VERSION with Vulkan (for Make from speech)" --notes $notes
           }
-          if ($LASTEXITCODE -ne 0) { throw "The draft pre-release couldn't be made" }
+          if ($LASTEXITCODE -ne 0) { throw "The pre-release couldn't be made" }
+          gh release view $tag --repo $repo --json isDraft,isPrerelease --jq '"draft: \(.isDraft), pre-release: \(.isPrerelease)"'

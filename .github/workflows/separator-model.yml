@@ -4,7 +4,8 @@
 # Run it by hand (Actions > Sound separator model > Run workflow): nothing it reads changes by itself, as the checkpoint
 # and BandIt's code are pinned. The ONNX is kept as the run's artifact, and put on a draft pre-release: Media Downloader
 # downloads it from SoundSeparator.Install.cs's ModelUrl (releases/download/separator-models-v1/bandit-v2-multi.onnx)
-# once it is published (Releases > the draft > Edit > Publish release). A model made again under another release name
+# once it is published (Releases > the draft > Edit > Publish release), or straight away with Publish ticked. Always a
+# pre-release, never the latest release: the app's own update check reads that one. A model made again under another release name
 # (separator-models-v2) needs ModelUrl and ModelSize changed in the app, and reaches only copies of that version: one
 # already downloaded isn't downloaded again.
 name: Sound separator model
@@ -20,9 +21,14 @@ on:
         description: Commit of kwatcharasupat/bandit-v2 whose model code is used
         required: true
         default: d5563d9031e95fdaa3e5a73d5020b9a0df61adb6
+      publish:
+        description: Publish it straight away, not as a draft to test first (copies of the app then download it)
+        type: boolean
+        required: false
+        default: false
 
 permissions:
-  # To make the draft pre-release
+  # To make the pre-release
   contents: write
 
 env:
@@ -90,23 +96,33 @@ jobs:
             bandit-v2-multi.onnx
             bandit-v2-multi.NOTICE.txt
 
-      # A draft, not published: its files replaced when a draft of that tag is there already (a run again), but a
-      # published one is left as it is, as copies of the app may have downloaded it
-      - name: Put it on a draft pre-release
+      # A draft, unless Publish was ticked: its files replaced when a draft of that tag is there already (a run again),
+      # and that draft published when asked; a published one is left as it is, as copies of the app may have downloaded it
+      - name: Put it on a pre-release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.release }}
           SIZE: ${{ steps.describe.outputs.size }}
           SHA256: ${{ steps.describe.outputs.sha256 }}
+          PUBLISH: ${{ inputs.publish && 'true' || 'false' }}
         run: |
           repo='${{ github.repository }}'
           if draft=$(gh release view "$TAG" --repo "$repo" --json isDraft --jq .isDraft 2>/dev/null); then
             if [ "$draft" != "true" ]; then echo "$TAG is published already: delete it on GitHub first to make it again"; exit 1; fi
             gh release upload "$TAG" bandit-v2-multi.onnx bandit-v2-multi.NOTICE.txt --repo "$repo" --clobber
+            if [ "$PUBLISH" = true ]; then gh release edit "$TAG" --repo "$repo" --draft=false --prerelease --latest=false; fi
           else
             notes="Not a Media Downloader release. The model of Tools > Separate voice, music and effects: BandIt v2's multilingual checkpoint (Watcharasupat, Wu and Orife) converted to ONNX by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }}, and checked against PyTorch with onnxruntime 1.24.4. $SIZE bytes, SHA-256 $SHA256. License: CC BY-SA 4.0, as the checkpoint's (bandit-v2-multi.NOTICE.txt).
 
-          A draft: test it, then Publish release. Copies of Media Downloader whose ModelUrl names $TAG then download it the first time the separator is used."
-            gh release create "$TAG" bandit-v2-multi.onnx bandit-v2-multi.NOTICE.txt --repo "$repo" --draft --prerelease --target "${{ github.sha }}" \
+          "
+            if [ "$PUBLISH" = true ]; then
+              notes+="Published by the run, as asked: copies of Media Downloader whose ModelUrl names $TAG download it the first time the separator is used."
+              draft=()
+            else
+              notes+="A draft: test it, then Publish release. Copies of Media Downloader whose ModelUrl names $TAG then download it the first time the separator is used."
+              draft=(--draft)
+            fi
+            gh release create "$TAG" bandit-v2-multi.onnx bandit-v2-multi.NOTICE.txt --repo "$repo" "${draft[@]}" --prerelease --latest=false --target "${{ github.sha }}" \
               --title "Sound separator model (BandIt v2, ONNX)" --notes "$notes"
           fi
+          gh release view "$TAG" --repo "$repo" --json isDraft,isPrerelease --jq '"draft: \(.isDraft), pre-release: \(.isPrerelease)"'
