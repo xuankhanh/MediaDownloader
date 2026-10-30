@@ -66,6 +66,7 @@ rest: it downloads in the background, several at a time, and tells you when each
 | **Bilingual subtitles** | In the Subtitle extractor, tick two languages and **Bilingual**: one file shows each line in both, the language you choose on top, the other under it. For learning a language, or watching together. |
 | **Browser extension** | In Chrome, Edge or Brave, one click on the extension's button sends the page you're on to the app, a video, pictures or a post (a blue arrow on the button shows when the page is a video), signed in as you are in the browser. Or right-click a link, a video or a picture and choose **Download with Media Downloader**. |
 | **Copy a link, it's read** | Turn on Tools > **Watch the clipboard for links**: copy a video's or post's address in your browser and it's ready to download. |
+| **Shut down when done** | Tick **Shut down the PC when done** under the queue: once the queue is empty, the PC turns off after a minute's countdown you can cancel. |
 | **Posts and videos that need a sign-in** | Send them with the browser extension, which brings your sign-in along. Or use the cookies of the browser you're signed in with (Firefox), or a cookies file, for what only members or friends can see. |
 | **Told when it's done** | A notification when a download ends while the window is in the background. |
 | **Its own log** | Right-click a download and choose **Show log** to see exactly what happened, to fix a problem or ask for help. |
