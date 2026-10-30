@@ -14,10 +14,10 @@ rest: it downloads in the background, several at a time, and tells you when each
 <br>
 
    1. **Video 1:** How to dub into another language  -> [Watch here](https://www.facebook.com/reel/1127255410237354)
-   2. **Video 2:** How to get hashtag, description, summary  -> [Watch here](facebook.com/reel/29095087443464943)
+   2. **Video 2:** How to get hashtag, description, summary  -> [Watch here](https://facebook.com/reel/29095087443464943)
    3. **Video 3:** How to extract subtitle -> [Watch here](https://www.facebook.com/reel/1818684849397431)
    4. **Video 4:** How to separate voice, music, sound effects -> [Watch here](https://www.facebook.com/reel/2836098690119168)
-   5. **Video 5:** How to extract pictures -> [Watch here](facebook.com/reel/1839809184136108)
+   5. **Video 5:** How to extract pictures -> [Watch here](https://facebook.com/reel/1839809184136108)
 
 </details>
 
