@@ -7,6 +7,20 @@ rest: it downloads in the background, several at a time, and tells you when each
 
 ![The main window: a video read from its link, the download options, the queue with three finished downloads, and Robert, the assistant, on the right, asked to download it as MP3: he has set Audio only and MP3 and asks to go ahead. Video: Big Buck Bunny, (c) Blender Foundation, CC BY 3.0](images/main-window.png)
 
+## 📺 Video Tutorials
+
+<details>
+<summary><b>Click here to watch 4 tutorial videos (Click to expand)</b></summary>
+<br>
+
+   1. **Video 1:** How to dub into another language  -> [Watch here](https://www.facebook.com/reel/1127255410237354)
+   2. **Video 2:** How to get hashtag, description, summary  -> [Watch here](facebook.com/reel/29095087443464943)
+   3. **Video 3:** How to extract subtitle -> [Watch here](https://www.facebook.com/reel/1818684849397431)
+   4. **Video 4:** How to separate voice, music, sound effects -> [Watch here](https://www.facebook.com/reel/2836098690119168)
+   5. **Video 5:** How to extract pictures -> [Watch here](facebook.com/reel/1839809184136108)
+
+</details>
+
 ## What it does
 
 1. **You paste a link.** A video, a whole playlist or channel, a picture, album or post, or several links at once.
