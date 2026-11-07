@@ -2,7 +2,7 @@
 
 **Media Downloader** (the Windows app, and its browser extension for Chrome, Edge and Brave)
 
-Last updated: October 29, 2026
+Last updated: November 7, 2026
 
 Media Downloader is a Windows desktop app. It runs on your own PC. It has no account, we don't run a server that
 receives your data, and it doesn't collect or send any usage or tracking information. We don't sell or share your data
@@ -13,6 +13,17 @@ with anyone.
 - **The sites you download from.** When you analyze or download a link, the app (through yt-dlp, or gallery-dl for
   pictures and posts) connects to that site, as your browser would, to read the video, pictures or post and download
   them. Each site has its own privacy policy.
+- **The popular videos lists** (the **Popular videos** menu), only when you press Find. **YouTube's** list asks Google's
+  YouTube Data API (`www.googleapis.com`) for a country's most popular videos, sending the country, the category and an
+  API key (the app's own, or one you give it); nothing about you. **Facebook's, TikTok's, Douyin's, Bilibili's and
+  Instagram's** lists are read by opening the site's page in a browser (Edge, Chrome or Brave, installed on your PC) with
+  no window and a profile made for the purpose, which is deleted when the list is read, as your browser would read the
+  page. They are read as anyone is shown them, unless you tick **Use my sign-in** (Facebook's Pages) or the site needs one
+  (Instagram's): then the cookies of the sign-in you saved (below) are given to that site only. Nothing is sent to us.
+- **Posting a video** (the **Upload videos** menu, and **Post when downloads finish**), only when you ask for it: the video
+  and its title and description are sent to the site you post to (YouTube, Facebook or TikTok) through a browser window of
+  its own, signed in with the sign-in you saved for that site, as if you had posted it yourself. What the site does with
+  it is in its own privacy policy. Nothing is sent to us.
 - **SponsorBlock**, for YouTube videos only, when **Cut sponsors** is ticked (it is, for every YouTube link: untick
   it for a video you don't want checked) or you make a PiP video: when you analyze one video, and when it downloads
   unless SponsorBlock already said it has nothing to cut, the app sends the video's ID to `sponsor.ajay.app` to learn
@@ -104,6 +115,13 @@ Everything stays on your PC:
 - The download queue (each download's link, title, options and where it was saved), in
   `%APPDATA%\MediaDownloader\queue.json`, so it comes back the next time the app starts. Remove downloads from the
   list, or press Clear finished, to take them out of it.
+- The **Library**, the list of the videos you downloaded (each one's title, link, file and when), in
+  `%LOCALAPPDATA%\MediaDownloader\library.json`, and the record of what you posted and where (`posted.json` there), so
+  the Library can show it. Delete a video from the Library, or the files, to take it out. When a post fails, the app may
+  keep a picture and the text of the page that showed the problem, in `%LOCALAPPDATA%\MediaDownloader\upload-debug`, to
+  fix it: they are only sent if you choose to send them to us.
+- The browser profiles made for the sign-ins used to post (for YouTube, in `%LOCALAPPDATA%\MediaDownloader\browser-profiles`),
+  which are removed with the sign-in.
 - yt-dlp, ffmpeg, Deno, gallery-dl and aria2, in `%LOCALAPPDATA%\MediaDownloader`, with the cookies (above): pasted cookies,
   the sites you signed in to, and the extension's while the app is open.
 - The tools that work on sound, when you have used them, in `%LOCALAPPDATA%\MediaDownloader` too: the speech recognizer
