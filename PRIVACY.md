@@ -18,8 +18,9 @@ with anyone.
   API key (the app's own, or one you give it); nothing about you. **Facebook's, TikTok's, Douyin's, Bilibili's and
   Instagram's** lists are read by opening the site's page in a browser (Edge, Chrome or Brave, installed on your PC) with
   no window and a profile made for the purpose, which is deleted when the list is read, as your browser would read the
-  page. They are read as anyone is shown them, unless you tick **Use my sign-in** (Facebook's Pages) or the site needs one
-  (Instagram's): then the cookies of the sign-in you saved (below) are given to that site only. Nothing is sent to us.
+  page. They are read as anyone is shown them, unless you saved a sign-in for the site (Instagram's needs one; TikTok's and Douyin's
+  use it when there is one): then the cookies of the sign-in you saved (below) are given to that site only. Facebook's lists never
+  use your sign-in. Nothing is sent to us.
 - **Posting a video** (the **Upload videos** menu, and **Post when downloads finish**), only when you ask for it: the video
   and its title and description are sent to the site you post to (YouTube, Facebook or TikTok) through a browser window of
   its own, signed in with the sign-in you saved for that site, as if you had posted it yourself. What the site does with
