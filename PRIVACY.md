@@ -1,10 +1,10 @@
 # Privacy Policy
 
-**Media Downloader** (the Windows app, and its browser extension for Chrome, Edge and Brave)
+**K-Media Downloader** (the Windows app, and its browser extension for Chrome, Edge and Brave)
 
 Last updated: November 7, 2026
 
-Media Downloader is a Windows desktop app. It runs on your own PC. It has no account, we don't run a server that
+K-Media Downloader is a Windows desktop app. It runs on your own PC. It has no account, we don't run a server that
 receives your data, and it doesn't collect or send any usage or tracking information. We don't sell or share your data
 with anyone.
 
@@ -30,7 +30,7 @@ with anyone.
   unless SponsorBlock already said it has nothing to cut, the app sends the video's ID to `sponsor.ajay.app` to learn
   which parts viewers marked as sponsors. Nothing else is sent.
 - **Its tools' download sites**, to download and update what it needs: GitHub (yt-dlp, aria2, ffmpeg from gyan.dev's
-  GitHub mirror, and new versions of Media Downloader itself), www.gyan.dev (ffmpeg, when GitHub can't be read),
+  GitHub mirror, and new versions of K-Media Downloader itself), www.gyan.dev (ffmpeg, when GitHub can't be read),
   dl.deno.land (Deno, for YouTube) and codeberg.org (gallery-dl, for pictures and posts). They only learn that a copy
   is being downloaded, as for any download from your browser. Turn off update checks in Settings if you don't want the
   app to check for new versions, and update yt-dlp, when it starts.
@@ -66,8 +66,8 @@ If you set a proxy in Settings, these connections go through it.
 
 ## The browser extension
 
-The extension does nothing until you click its button, or **Download with Media Downloader** in the right-click menu.
-Then it sends, only to the Media Downloader app on your PC (never over the internet):
+The extension does nothing until you click its button, or **Download with K-Media Downloader** in the right-click menu.
+Then it sends, only to the K-Media Downloader app on your PC (never over the internet):
 
 - the address of the page, or of the link you right-clicked;
 - your browser's cookies for that one site (for example all of youtube.com's), so the app is signed in to it as you
@@ -141,8 +141,8 @@ Everything stays on your PC:
 ## Deleting your data
 
 1. Remove the extension, if you added it: in the browser, open `chrome://extensions` (`edge://extensions`,
-   `brave://extensions`) and press **Remove** on Media Downloader.
-2. Uninstall Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept (pasted cookies,
+   `brave://extensions`) and press **Remove** on K-Media Downloader.
+2. Uninstall K-Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept (pasted cookies,
    the sites you signed in to, and the extension's) and the downloads' logs.
 3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queue, the list of what you downloaded) and
    `%LOCALAPPDATA%\MediaDownloader` (yt-dlp, ffmpeg, Deno, gallery-dl, aria2, the tools that work on sound and their
