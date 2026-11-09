@@ -1,3 +1,5 @@
+**English** | [Tiếng Việt](https://github.com/xuankhanh/MediaDownloader/blob/main/README.vi.md)
+
 # K-Media Downloader
 
 **Save videos, music, pictures, albums, subtitles and thumbnails from YouTube, Facebook, TikTok, Douyin, Bilibili, Instagram and 1800+ other sites, in the quality and format you choose.**
