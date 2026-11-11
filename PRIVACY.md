@@ -2,7 +2,7 @@
 
 **K-Media Downloader** (the Windows app, and its browser extension for Chrome, Edge and Brave)
 
-Last updated: November 7, 2026
+Last updated: November 11, 2026
 
 K-Media Downloader is a Windows desktop app. It runs on your own PC. It has no account, we don't run a server that
 receives your data, and it doesn't collect or send any usage or tracking information. We don't sell or share your data
@@ -21,6 +21,12 @@ with anyone.
   page. They are read as anyone is shown them, unless you saved a sign-in for the site (Instagram's needs one; TikTok's and Douyin's
   use it when there is one): then the cookies of the sign-in you saved (below) are given to that site only. Facebook's lists never
   use your sign-in. Nothing is sent to us.
+- **Bilibili's international list, only when bilibili.tv can't be read directly** (a network that blocks it, for example), and
+  only when you press Find: the app asks `api.proxyscrape.com` for a list of free public proxies (Vietnamese ones) and tries
+  to read the list through up to 20 of them, one after the other. That service sees your PC's address, as any site does, and
+  a proxy sees which Bilibili pages are asked for, but not your sign-in or your cookies: the lists are read with nothing of
+  yours, only the anonymous device cookie Bilibili itself hands out, and the connection to Bilibili is encrypted, with its
+  certificate checked. Nothing is sent to us.
 - **Posting a video** (the **Upload videos** menu, and **Post when downloads finish**), only when you ask for it: the video
   and its title and description are sent to the site you post to (YouTube, Facebook or TikTok) through a browser window of
   its own, signed in with the sign-in you saved for that site, as if you had posted it yourself. What the site does with
@@ -116,6 +122,9 @@ Everything stays on your PC:
 - The download queue (each download's link, title, options and where it was saved), in
   `%APPDATA%\MediaDownloader\queue.json`, so it comes back the next time the app starts. Remove downloads from the
   list, or press Clear finished, to take them out of it.
+- The posting queue (each video's file, title, description, tags, the channel it goes to and where it stands), in
+  `%APPDATA%\MediaDownloader\upload-queue.json`, so the Uploads list comes back the next time the app starts. Remove
+  videos from the list, or press Clear finished, to take them out of it.
 - The **Library**, the list of the videos you downloaded (each one's title, link, file and when), in
   `%LOCALAPPDATA%\MediaDownloader\library.json`, and the record of what you posted and where (`posted.json` there), so
   the Library can show it. Delete a video from the Library, or the files, to take it out. When a post fails, the app may
@@ -144,7 +153,7 @@ Everything stays on your PC:
    `brave://extensions`) and press **Remove** on K-Media Downloader.
 2. Uninstall K-Media Downloader in Windows (**Settings > Apps**). This deletes all the cookies it kept (pasted cookies,
    the sites you signed in to, and the extension's) and the downloads' logs.
-3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queue, the list of what you downloaded) and
+3. Delete the folders `%APPDATA%\MediaDownloader` (settings, the queues, the list of what you downloaded) and
    `%LOCALAPPDATA%\MediaDownloader` (yt-dlp, ffmpeg, Deno, gallery-dl, aria2, the tools that work on sound and their
    models, and your license key). Uninstalling leaves them,
    so a reinstall keeps your settings and license.
