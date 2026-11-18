@@ -4,6 +4,8 @@
 
 **Tải video, nhạc, ảnh, album, phụ đề và ảnh bìa từ YouTube, Facebook, TikTok, Douyin, Bilibili, Instagram và hơn 1800 trang khác, với chất lượng và định dạng bạn chọn.**
 
+**Trang web:** https://www.facebook.com/kdownloader
+
 Dán liên kết, bấm **Phân tích** để xem trang đó có gì (một video và các mức chất lượng, một danh sách phát, hay ảnh của một bài đăng), rồi bấm **Thêm vào hàng đợi**. K-Media Downloader lo phần còn lại: tải ngầm, nhiều video cùng lúc, và báo cho bạn khi từng video đã lưu xong.
 
 ![Cửa sổ chính: một video đọc từ liên kết, các tùy chọn tải, hàng đợi với ba lượt tải đã xong cùng hai thẻ Tải xuống và Đăng lên, và các menu Video nổi bật, Đăng video, Video đã đăng, Thư viện và Thống kê. Video: Big Buck Bunny, (c) Blender Foundation, CC BY 3.0](images/main-window.vi.png)
