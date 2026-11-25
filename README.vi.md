@@ -62,7 +62,7 @@ Dán liên kết, bấm **Phân tích** để xem trang đó có gì (một vide
 | **Tắt máy khi xong** | Tick **Tắt máy khi xong** dưới hàng đợi: khi hàng đợi trống, máy tắt sau một phút đếm ngược mà bạn có thể hủy. |
 | **Bài đăng và video cần đăng nhập** | Gửi chúng bằng tiện ích mở rộng trình duyệt, nó mang theo phiên đăng nhập của bạn. Hoặc dùng cookie của trình duyệt bạn đã đăng nhập (Firefox), hay một tệp cookie, cho những gì chỉ thành viên hoặc bạn bè xem được. |
 | **Báo khi xong** | Một thông báo khi một lượt tải kết thúc lúc cửa sổ đang chạy nền. |
-| **Nhật ký riêng** | Bấm chuột phải vào một lượt tải và chọn **Xem nhật ký** để biết chính xác điều gì đã xảy ra, để sửa lỗi hoặc nhờ giúp đỡ. |
+| **Nhật ký riêng** | Bấm chuột phải vào một lượt tải và chọn **Xem nhật ký** để biết chính xác điều gì đã xảy ra, để sửa lỗi hoặc nhờ giúp đỡ. Để nhờ giúp khi gặp lỗi, Trợ giúp > **Báo lỗi...** tạo một tệp zip gồm nhật ký của hôm nay và hôm qua cùng thông tin về máy của bạn (phiên bản ứng dụng và các công cụ của nó, dung lượng ổ trống): bạn viết điều đã xảy ra, tệp được hiện trong thư mục của nó, và một email gửi tác giả được mở bên cạnh để bạn đính kèm tệp vào. Ứng dụng không gửi gì đi. Nhật ký cũng giữ lại lỗi làm đóng một cửa sổ, và những cửa sổ, nút bạn đã đi qua, để theo dõi được lỗi. |
 | **Sáng hay tối, tiếng Anh hay tiếng Việt** | Theo giao diện Windows của bạn. Lần đầu mở ra là tiếng Việt; chuyển sang tiếng Anh bằng hai lá cờ ở góc trên bên phải cửa sổ (hoặc trong Cài đặt > Ngôn ngữ), và ứng dụng khởi động lại với ngôn ngữ đó. |
 | **Cho các script** | `MediaDownloader.exe <liên kết>... [--dir <thư mục>] [--cookies <cookies.txt>]` mở ứng dụng với các liên kết đã đọc sẵn, lưu vào thư mục đó với các cookie đó, chỉ cho lần chạy này. |
 
