@@ -42,6 +42,9 @@ New-Item -ItemType Directory -Force $Work, $Out | Out-Null
 foreach ($d in 'tmp', 'pipcache', 'uvcache', 'py', 'hf', 'stage') { New-Item -ItemType Directory -Force "$Work\$d" | Out-Null }
 $env:TEMP = "$Work\tmp"; $env:TMP = "$Work\tmp"; $env:PIP_CACHE_DIR = "$Work\pipcache"; $env:UV_CACHE_DIR = "$Work\uvcache"
 $env:UV_PYTHON_INSTALL_DIR = "$Work\py"; $env:HF_HOME = "$Work\hf"; $env:PYTHONUTF8 = "1"
+# Only the Python build uv fetches into $Work\py: a Python 3.12 that is on the PATH (the one setup-python leaves on the GitHub runner) would be taken instead, and nothing
+# would be left in $Work\py to put in the pack (a pack is made of the one build, whatever is installed on the machine that makes it)
+$env:UV_PYTHON_PREFERENCE = "only-managed"
 
 # --- uv, then Python 3.12 and the libraries, at the versions the engine was tried with
 if (-not (Test-Path "$Work\bootstrap\Scripts\uv.exe")) {
