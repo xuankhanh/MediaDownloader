@@ -19,6 +19,9 @@ import time
 import wave
 import zipfile
 
+# The Python of the GitHub runner writes to a pipe in the Windows code page, which has no Vietnamese letters (voices are called "Hải Đăng"): UTF-8, whatever is set
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 failed = []
 
 
