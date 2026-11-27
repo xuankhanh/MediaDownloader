@@ -1,0 +1,31 @@
+K-Media Downloader's Vietnamese voices (Tools > Dub into another language, Tools > Record my voice) are read by VieNeu-TTS and the programs and models
+it is made of, which are not made by K-Media Downloader's author and are used under their own licenses. Everything runs on this PC: nothing is sent anywhere.
+
+VieNeu-TTS v3 Turbo (the program "vieneu" and the model)
+    Pham Nguyen Ngoc Bao. Apache License 2.0.   https://github.com/pnnbao97/VieNeu-TTS   https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo
+    The model's files "denoiser.onnx" and "speaker_encoder.onnx" and the voices of the program come with the model under the same license.
+
+MOSS-Audio-Tokenizer-Nano (the codec that turns the model's tokens into sound)
+    OpenMOSS Team. Apache License 2.0.   https://huggingface.co/OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX
+
+sea-g2p (turns the text into sounds)
+    Pham Nguyen Ngoc Bao. Apache License 2.0.   https://github.com/pnnbao97/sea-g2p
+
+kaldi-native-fbank (the voice's features)
+    Apache License 2.0.   https://github.com/csukuangfj/kaldi-native-fbank
+
+ONNX Runtime
+    Microsoft. MIT License.   https://github.com/microsoft/onnxruntime
+
+Python 3.12 (python-build-standalone)
+    Python Software Foundation License; the distribution by Astral, mostly under the Mozilla Public License 2.0 and permissive licenses.   https://github.com/astral-sh/python-build-standalone
+
+python-soxr and libsoxr (changes the sampling rate of the recording of a voice)
+    GNU Lesser General Public License 2.1 or later (libsoxr, with parts under BSD licenses). Its license texts are in "site-packages\soxr-*.dist-info\licenses". It is a separate
+    library in the voice program's own folder, not part of K-Media Downloader's program: it can be replaced by another build of python-soxr.
+    Source: https://github.com/dofuuz/python-soxr   and   https://sourceforge.net/projects/soxr/
+
+NumPy, SoundFile, tokenizers, huggingface_hub, PyYAML and their dependencies
+    BSD, MIT or Apache licenses; each package's own license is in its folder under "site-packages" (the *.dist-info folders).
+
+The Apache License 2.0 is in Apache-2.0.txt, beside this file.

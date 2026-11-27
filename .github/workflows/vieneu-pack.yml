@@ -1,0 +1,132 @@
+# Makes the voice pack of Media Downloader's Tools > Dub into another language and Tools > Record my voice: the Vietnamese voices
+# VieNeu-TTS v3 Turbo reads (Pham Nguyen Ngoc Bao, Apache-2.0), and a copy of a person's own voice. By vieneu-pack/build-pack.ps1: Python 3.12
+# with the libraries the engine needs and vieneu_runner.py (the runtime), and the model for CPUs with VNNI (int8) and for the others (fp32). The app downloads
+# the runtime and the one model its PC can run (about 315 or 410 MB), the first time a Vietnamese voice of VieNeu's or a person's own is used.
+# Run it by hand (Actions > VieNeu voice pack > Run workflow): it has no schedule, because VieNeu changes rarely and every copy of the app that reads voices downloads a new
+# pack again. Each pack goes on a pre-release of its own, vieneu-pack-v<n>, n the next number (a draft is made again in its place): the app takes the newest published one
+# of its contract (VieNeu.cs's PackContract, the "contract" of manifest.json: how the app calls vieneu_runner.py and what the folders hold) the next time it reads a voice, as it
+# does the sound separator's model and whisper.cpp's builds, with no change in the app; deleting it puts every copy back on the one before. Ask for another contract only for a
+# pack made for a changed app: older apps keep to the newest pack of theirs.
+# The pack is tested before anything is released: the manifest against the files, the zips unpacked as the app unpacks them, the list of voices, and a line read with the
+# model's own voice (fp32 and int8) and with a voice copied from a recording (vieneu-pack/smoke_test.py): any of it off fails the run. It is kept as the run's artifact, and put on
+# the pre-release: published when Publish is ticked, which every copy of the app then takes; else a draft, which the app doesn't see until it is published by hand (Releases > the
+# draft > Edit > Publish release). A published pack is never changed. Always a pre-release, never the latest release: the app's own update check reads that one.
+name: VieNeu voice pack
+
+on:
+  workflow_dispatch:
+    inputs:
+      contract:
+        description: The contract with the app, PackContract in MediaKit's VieNeu.cs. It stays 1 until the app's way of calling the pack is changed
+        required: true
+        default: '1'
+      publish:
+        description: Publish it straight away when it passes the test, not as a draft (every copy of the app then takes it, and downloads it again)
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  # To make the pre-release
+  contents: write
+
+jobs:
+  pack:
+    runs-on: windows-2022
+    timeout-minutes: 90
+    env:
+      CONTRACT: ${{ inputs.contract }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      # The next number, before anything is spent on it: the newest vieneu-pack release's plus one; when that is a draft, its own (made again in its place): a published pack is never changed
+      - name: Pick the number
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! [[ "$CONTRACT" =~ ^[0-9]+$ ]]; then echo "::error::The contract is a number (1, 2...), not '$CONTRACT'"; exit 1; fi
+          prefix=vieneu-pack-v
+          newest=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --json tagName,isDraft \
+            --jq "[.[] | select(.tagName | test(\"^${prefix}[0-9]+\$\")) | .n = (.tagName | ltrimstr(\"$prefix\") | tonumber)] | max_by(.n) // empty | \"\(.n) \(.isDraft)\"")
+          if [ -z "$newest" ]; then n=1
+          else
+            read -r last draft <<< "$newest"
+            if [ "$draft" = true ]; then n=$last; else n=$((last + 1)); fi
+          fi
+          echo "PACK_VERSION=$n" >> "$GITHUB_ENV"
+          echo "Newest pack: ${newest:-none}. This one: ${prefix}${n}, contract $CONTRACT" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Get this repository (the scripts)
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Python, the libraries and the models come from PyPI, GitHub and Hugging Face, into a folder of the runner's big drive: about 3 GB, and a few minutes
+      - name: Make the pack
+        shell: powershell
+        run: |
+          $work = Join-Path $env:RUNNER_TEMP 'vieneu-work'
+          $out = Join-Path $env:RUNNER_TEMP 'vieneu-dist'
+          & .\vieneu-pack\build-pack.ps1 -Work $work -Out $out -PackVersion $env:PACK_VERSION -Contract $env:CONTRACT -Python python
+          if (-not (Test-Path "$out\manifest.json")) { throw 'the pack was not made' }
+          "PACK_DIR=$out" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ascii
+          $global:LASTEXITCODE = 0
+
+      - name: Test it
+        shell: powershell
+        run: python -I vieneu-pack/smoke_test.py "$env:PACK_DIR" $env:PACK_VERSION $env:CONTRACT
+
+      - name: Describe it
+        shell: powershell
+        run: |
+          $m = Get-Content "$env:PACK_DIR\manifest.json" -Raw | ConvertFrom-Json
+          $lines = @("VieNeu voice pack $($m.version), contract $($m.contract), with vieneu $($m.vieneu)", '')
+          foreach ($p in 'runtime', 'int8', 'fp32') { $lines += ('{0}: {1}, {2:N1} MB, SHA-256 {3}' -f $p, $m.$p.file, ($m.$p.size / 1MB), $m.$p.sha256) }
+          $lines | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          $global:LASTEXITCODE = 0
+
+      - name: Keep the pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: vieneu-pack-${{ env.PACK_VERSION }}
+          path: ${{ env.PACK_DIR }}
+          # The zips are compressed already
+          compression-level: 0
+          retention-days: 7
+
+      # Its release: a draft made again in its place, or a new one, published with Publish ticked
+      - name: Put it on a pre-release
+        shell: bash
+        env:
+          PUBLISH: ${{ inputs.publish && 'true' || 'false' }}
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          tag="vieneu-pack-v$PACK_VERSION"
+          dir=$(cygpath -u "$PACK_DIR")
+          vieneu=$(python -c "import json,sys; print(json.load(open(sys.argv[1], encoding='utf-8'))['vieneu'])" "$dir/manifest.json")
+          cp vieneu-pack/THIRD-PARTY.txt "$dir/THIRD-PARTY.txt"
+          files=("$dir/manifest.json" "$dir/THIRD-PARTY.txt" "$dir"/vieneu-runtime-"$PACK_VERSION".zip "$dir"/vieneu-int8-"$PACK_VERSION".zip "$dir"/vieneu-fp32-"$PACK_VERSION".zip)
+
+          notes="Not a Media Downloader release. The voice pack $PACK_VERSION of Tools > Dub into another language and Tools > Record my voice: the Vietnamese voices VieNeu-TTS v3 Turbo reads (vieneu $vieneu), and a copy of a person's own voice. Contract $CONTRACT: the app takes the newest published pack of its contract. Made by run ${{ github.server_url }}/$repo/actions/runs/${{ github.run_id }} (vieneu-pack/build-pack.ps1) and tested: the list of voices, and a line read with the model's own voice and with a voice copied from a recording. The app downloads the runtime (Python and the libraries) and the one model its PC can run: int8 for CPUs with VNNI, fp32 for the others. Checksums: manifest.json. Licenses: Apache-2.0 for VieNeu-TTS, its model and codec, and LGPL for libsoxr; the others are in THIRD-PARTY.txt, which is in the runtime as well.
+
+          "
+          if [ "$PUBLISH" = true ]; then
+            notes+="Published by the run once its checks passed: every copy of Media Downloader of contract $CONTRACT takes it the next time it reads with such a voice, as the newest vieneu-pack pre-release. Deleting it puts every copy back on the one before."
+            draft=()
+          else
+            notes+="A draft: test it, then Publish release. Every copy of Media Downloader of contract $CONTRACT then takes it the next time it reads with such a voice, as the newest vieneu-pack pre-release."
+            draft=(--draft)
+          fi
+
+          if is_draft=$(gh release view "$tag" --repo "$repo" --json isDraft --jq .isDraft 2>/dev/null); then
+            if [ "$is_draft" != true ]; then echo "::error::$tag is published already"; exit 1; fi
+            gh release upload "$tag" "${files[@]}" --repo "$repo" --clobber
+            gh release edit "$tag" --repo "$repo" --notes "$notes"
+            if [ "$PUBLISH" = true ]; then gh release edit "$tag" --repo "$repo" --draft=false --prerelease --latest=false; fi
+          else
+            gh release create "$tag" "${files[@]}" --repo "$repo" "${draft[@]}" --prerelease --latest=false \
+              --target "${{ github.sha }}" --title "VieNeu voice pack $PACK_VERSION" --notes "$notes"
+          fi
+          gh release view "$tag" --repo "$repo" --json tagName,isDraft,isPrerelease --jq '"\(.tagName) draft: \(.isDraft), pre-release: \(.isPrerelease)"'
