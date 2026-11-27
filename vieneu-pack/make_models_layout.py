@@ -22,8 +22,15 @@ REPOS = {
     "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX": ["*.onnx", "*.data", "*.json"],
 }
 
+# The revision of each repository the pack is made from (checked 2026-11-27): a pack made later is of the same files, not of whatever the authors have changed since.
+# A newer model is taken by changing these on purpose, then making a pack and listening to it
+REVISIONS = {
+    "pnnbao-ump/VieNeu-TTS-v3-Turbo": "61b85e3d937fbbacb387714180e8182823512523",
+    "OpenMOSS-Team/MOSS-Audio-Tokenizer-Nano-ONNX": "ceff0d0749bfb3fa2d61149794ec6feef0d1e1ae",
+}
+
 for repo, patterns in REPOS.items():
-    source = snapshot_download(repo, allow_patterns=patterns)
+    source = snapshot_download(repo, revision=REVISIONS[repo], allow_patterns=patterns)
     revision = os.path.basename(source)
     root = os.path.join(folder, "hub", "models--" + repo.replace("/", "--"))
     target = os.path.join(root, "snapshots", revision)

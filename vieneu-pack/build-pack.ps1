@@ -56,7 +56,8 @@ Remove-Item "$Work\env" -Recurse -Force -ErrorAction SilentlyContinue
 & $uv venv --python 3.12 "$Work\env"; Check-Exit "uv venv"
 $envPython = "$Work\env\Scripts\python.exe"
 & $uv pip install --python $envPython --no-deps "vieneu==3.8.5"; Check-Exit "uv pip install vieneu"
-& $uv pip install --python $envPython "sea-g2p==0.11.0" "onnxruntime==1.32.0" "numpy==2.5.5" "soundfile==0.14.0" "soxr==1.1.0" "kaldi-native-fbank==1.23.3" "tokenizers==0.23.3" "huggingface-hub==2.5.0" "PyYAML==6.0.4"
+# constraints.txt pins what these bring along as well (made with uv pip compile of the same list, for Python 3.12 on Windows): a pack made later has the libraries of this one
+& $uv pip install --python $envPython -c "$here\constraints.txt" "sea-g2p==0.11.0" "onnxruntime==1.32.0" "numpy==2.5.5" "soundfile==0.14.0" "soxr==1.1.0" "kaldi-native-fbank==1.23.3" "tokenizers==0.23.3" "huggingface-hub==2.5.0" "PyYAML==6.0.4"
 Check-Exit "uv pip install the libraries"
 
 # --- the runtime zip: Python, the libraries, the runner

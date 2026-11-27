@@ -15,7 +15,6 @@ The job file (UTF-8 JSON):
     voice          {"kind": "clone", "wav": "path"} (a person's own recording)  or  {"kind": "preset", "name": "..."}
     texts          the lines to read
     out_dir        where the clips go
-or, for the voices the model has:   {"command": "list", "site_packages": ..., "models_dir": ..., "precision": ...}   (one {"event": "voices", "voices": [...]} line)
 """
 import json
 import os
@@ -46,13 +45,6 @@ def main():
     started = time.time()
     tts = Vieneu(mode="v3turbo", precision=job.get("precision", "int8"), backend="onnx", device="cpu", threads=int(job.get("threads", 0)))
     emit(event="loaded", seconds=round(time.time() - started, 1), sample_rate=tts.sample_rate)
-
-    if job.get("command") == "list":
-        voices = []
-        for name, v in getattr(tts, "_preset_voices", {}).items():
-            voices.append({"name": name, "gender": v.get("gender", ""), "description": v.get("description", ""), "featured": v.get("featured")})
-        emit(event="voices", voices=voices)
-        return 0
 
     voice = job["voice"]
     if voice["kind"] == "clone":

@@ -30,22 +30,29 @@ permissions:
   # To make the pre-release
   contents: write
 
+# One run at a time: two would pick the same number
+concurrency:
+  group: vieneu-pack
+  cancel-in-progress: false
+
 jobs:
   pack:
     runs-on: windows-2022
     timeout-minutes: 90
     env:
       CONTRACT: ${{ inputs.contract }}
-      GH_TOKEN: ${{ github.token }}
     steps:
       # The next number, before anything is spent on it: the newest vieneu-pack release's plus one; when that is a draft, its own (made again in its place): a published pack is never changed
       - name: Pick the number
         shell: bash
+        # The token only where releases are read or written, not where Python's libraries are installed and run
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if ! [[ "$CONTRACT" =~ ^[0-9]+$ ]]; then echo "::error::The contract is a number (1, 2...), not '$CONTRACT'"; exit 1; fi
           prefix=vieneu-pack-v
-          newest=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --json tagName,isDraft \
+          newest=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 1000 --json tagName,isDraft \
             --jq "[.[] | select(.tagName | test(\"^${prefix}[0-9]+\$\")) | .n = (.tagName | ltrimstr(\"$prefix\") | tonumber)] | max_by(.n) // empty | \"\(.n) \(.isDraft)\"")
           if [ -z "$newest" ]; then n=1
           else
@@ -100,6 +107,7 @@ jobs:
         shell: bash
         env:
           PUBLISH: ${{ inputs.publish && 'true' || 'false' }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           repo="$GITHUB_REPOSITORY"
@@ -123,7 +131,8 @@ jobs:
           if is_draft=$(gh release view "$tag" --repo "$repo" --json isDraft --jq .isDraft 2>/dev/null); then
             if [ "$is_draft" != true ]; then echo "::error::$tag is published already"; exit 1; fi
             gh release upload "$tag" "${files[@]}" --repo "$repo" --clobber
-            gh release edit "$tag" --repo "$repo" --notes "$notes"
+            # The tag is made when it is published, at this run's commit (the scripts that made the files), not at the first run's
+            gh release edit "$tag" --repo "$repo" --notes "$notes" --target "${{ github.sha }}"
             if [ "$PUBLISH" = true ]; then gh release edit "$tag" --repo "$repo" --draft=false --prerelease --latest=false; fi
           else
             gh release create "$tag" "${files[@]}" --repo "$repo" "${draft[@]}" --prerelease --latest=false \
